@@ -1,5 +1,5 @@
-export function getOrdersForTomorrow() {
-  const apiEndpoint = 'https://u2canque-server.onrender.com/api/order/tomorrow';
+export function getOrdersForNextBusinessDay() {
+  const apiEndpoint = 'https://u2canque-server.onrender.com/api/order/nextBusinessDay';
 
   return fetch(apiEndpoint, {
     method: 'GET',
