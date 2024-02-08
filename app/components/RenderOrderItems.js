@@ -1,5 +1,6 @@
 import React from 'react'
 import RenderItemOptions from './RenderItemOptions';
+import CancelButton from './CancelOrderButton';
 
 const RenderOrderItems = ({ items }) => {
   return (

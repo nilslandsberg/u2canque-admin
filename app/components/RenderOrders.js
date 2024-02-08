@@ -1,10 +1,12 @@
 import React from 'react';
 import RenderOrderItems from './RenderOrderItems';
+import CancelButton from './CancelOrderButton';
 
 const RenderOrders = ({ orders }) => {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 overflow-auto py-5 px-2">
       {orders.map((order) => (
+        <>
         <div
           key={order._id}
           className="card bg-black p-2 text-white text-left shadow-md flex flex-col justify-start overflow-hidden border rounded" 
@@ -21,7 +23,9 @@ const RenderOrders = ({ orders }) => {
               <RenderOrderItems items={order.items} />
             </div>
           </div>
+          <CancelButton orderId={order._id} />
         </div>
+        </>
       ))}
     </div>
   );
