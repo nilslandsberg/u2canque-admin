@@ -30,7 +30,7 @@ const OrdersForToday = () => {
 
   return (
     <>
-    {isLoading ? <div className="text-white">Loading...</div> : 
+    {isLoading ? <div className="text-white text-center">Loading...</div> : 
       <>
         <div className="text-white z-35 font-bold text-center text-xl">Orders To Be Picked Up Today, <OrderDate orderDate={date} /></div>
         <div className="flex overflow-x-scroll pb-10 hide-scroll-bar">
