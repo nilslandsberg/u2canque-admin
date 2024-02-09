@@ -1,4 +1,4 @@
-import OrdersForTomorrow from "@/app/components/OrdersForNextBusinessDay";
+import OrdersForNextBusinessDay from "@/app/components/OrdersForNextBusinessDay";
 import Image from "next/image";
 
 export default function Home() {
@@ -14,7 +14,7 @@ export default function Home() {
           <hr />
         </div>
         <div className="flex flex-col items-center justify-start h-screen bg-black pt-4">
-          <OrdersForTomorrow />
+          <OrdersForNextBusinessDay />
         </div>
       </main>
     </>
