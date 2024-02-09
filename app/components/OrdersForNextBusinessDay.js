@@ -32,7 +32,7 @@ const OrdersForNextBusinessDay = () => {
     <>
     {isLoading ? <div className="text-white">Loading...</div> : 
       <>
-        <div className="text-white z-35 font-bold text-xl">Orders For <OrderDate orderDate={date} /></div>
+        <div className="text-white z-35 font-bold text-center text-xl">Orders For Next Business Day, <OrderDate orderDate={date} /></div>
           <div className="flex flex-nowrap lg:ml-40 md:ml-20 ml-10 ">
             <RenderOrders orders={orders} />
           </div>

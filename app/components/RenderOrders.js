@@ -4,7 +4,7 @@ import CancelButton from './CancelOrderButton';
 
 const RenderOrders = ({ orders }) => {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 overflow-y-auto py-5 px-2">
+    <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 overflow-y-auto py-5 px-2">
       {orders.map((order) => (
         <div
           key={order._id}
