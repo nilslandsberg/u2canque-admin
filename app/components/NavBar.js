@@ -1,6 +1,8 @@
 import Image from 'next/image'
 import React from 'react'
 import NavBarLinks from './NavBarLinks'
+import NavBarMobileMenuButton from './NavBarMobileMenuButton'
+import NavBarMobileLinks from './NavBarMobileLinks'
 // import NavBarLinks from './NavBarLinks'
 // import NavBarMobileLinks from './NavBarMobileLinks'
 // import NavBarMobileMenuButton from './NavBarMobileMenuButton'
@@ -20,10 +22,10 @@ const NavBar = () => {
           </div>
         </div>
             <NavBarLinks />
-            {/* <NavBarMobileMenuButton />  */}
+            <NavBarMobileMenuButton /> 
           </div>
         </div>
-        {/* <NavBarMobileLinks /> */}
+        <NavBarMobileLinks />
       </nav>
     </div>
   )

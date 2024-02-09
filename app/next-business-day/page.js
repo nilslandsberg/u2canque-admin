@@ -5,7 +5,7 @@ export default function page() {
   return (
     <>
       <main>
-        <div className="flex flex-col items-center justify-start h-screen bg-black pt-[160px]">
+        <div className="flex flex-col items-center justify-start h-screen bg-black pt-[160px] overflow-auto">
           <OrdersForNextBusinessDay />
         </div>
       </main>
