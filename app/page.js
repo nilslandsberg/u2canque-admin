@@ -1,20 +1,11 @@
-import OrdersForNextBusinessDay from "@/app/components/OrdersForNextBusinessDay";
-import Image from "next/image";
+import OrdersForToday from "./components/OrdersForToday";
 
 export default function Home() {
   return (
     <>
       <main>
-        <div className="relative flex flex-col justify-start bg-black">
-          <div className="relative flex flex-col z-30 p-5 text-2xl  
-            text-white text-center items-center">
-            <Image src='/images/U2CanQueLogo.svg' alt="logo" width={200} height={200} className="pb-2" />
-            Order Management
-          </div>
-          <hr />
-        </div>
-        <div className="flex flex-col items-center justify-start h-screen bg-black pt-4">
-          <OrdersForNextBusinessDay />
+        <div className="flex flex-col items-center justify-start h-screen bg-black pt-[160px]">
+          <OrdersForToday />
         </div>
       </main>
     </>
