@@ -1,6 +1,7 @@
 import React from 'react';
 import RenderOrderItems from './RenderOrderItems';
 import CancelButton from './CancelOrderButton';
+import OrderDate from './OrderDate';
 
 const RenderOrders = ({ orders }) => {
   return (
@@ -14,6 +15,7 @@ const RenderOrders = ({ orders }) => {
             <div>Customer: {order.customer.firstName} {order.customer.lastName}</div>
             <div>Phone: {order.customer.phone}</div>
             <div>E-mail: {order.customer.email}</div>
+            <div>Date: <OrderDate orderDate={order.date} /></div>
             <div>Pickup Time: {order.pickUpTime}</div>
           </div>
           <div className="border-b-2 border-gray-300 mb-2"></div>
