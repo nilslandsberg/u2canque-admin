@@ -26,20 +26,24 @@ const OrdersForNextBusinessDay = () => {
     fetchData();
   }, [])
   
-  console.log(date)
-
   return (
     <>
-    {isLoading ? <div className="text-white text-center">Loading...</div> : 
-      <>
-        <div className="text-white z-35 font-bold text-center text-xl">Orders For Next Business Day, <OrderDate orderDate={date} /></div>
-          <div className="flex flex-nowrap lg:ml-40 md:ml-20 ml-10 ">
-            <RenderOrders orders={orders} />
-          </div>
-      </>
-    }
+      {isLoading ? <div className="text-white text-center">Loading...</div> : 
+        <>
+          { orders.length === 0 ? (
+            <div className="text-white text-center pt-4 text-2xl font-bold">There are no orders for the next business day.</div>
+          ) : (
+            <>
+              <div className="text-white z-35 font-bold text-center text-xl">Orders For Next Business Day, <OrderDate orderDate={date} /> </div>
+              <div className="flex flex-nowrap lg:ml-40 md:ml-20 ml-10 ">
+                <RenderOrders orders={orders} />
+              </div>
+            </>
+            )
+          }
+        </>
+      }
     </>
-
   );
 }
 

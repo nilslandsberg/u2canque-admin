@@ -12,7 +12,6 @@ const OrdersForNextWeek = () => {
     const fetchData = async () => {
       try {
         const response = await getOrdersForNextWeek();
-        console.log(response)
         setOrders(response.orders);
         setIsLoading(false);
       } catch (error) {
@@ -26,14 +25,21 @@ const OrdersForNextWeek = () => {
 
   return (
     <>
-    {isLoading ? <div className="text-white text-center">Loading...</div> : 
-      <>
-        <div className="text-white z-35 font-bold text-center text-xl">Orders For The Next Week</div>
-          <div className="flex flex-nowrap lg:ml-40 md:ml-20 ml-10 ">
-            <RenderOrders orders={orders} />
-          </div>
-      </>
-    }
+      {isLoading ? <div className="text-white text-center">Loading...</div> : 
+        <>
+          { orders.length === 0 ? (
+              <div className="text-white text-center pt-4 text-2xl font-bold">There are no upcoming orders.</div>
+            ) : (
+              <>
+                <div className="text-white z-35 font-bold text-center text-xl">Orders For The Next Week</div>
+                <div className="flex flex-nowrap lg:ml-40 md:ml-20 ml-10 ">
+                  <RenderOrders orders={orders} />
+                </div>
+              </>
+            )
+          }
+        </>
+      }
     </>
 
   );

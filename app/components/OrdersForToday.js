@@ -26,22 +26,25 @@ const OrdersForToday = () => {
     fetchData();
   }, [])
   
-  console.log(date)
 
   return (
     <>
-    {isLoading ? <div className="text-white text-center">Loading...</div> : 
-      <>
-        <div className="text-white z-35 font-bold text-center text-xl">Orders To Be Picked Up Today, <OrderDate orderDate={date} /></div>
-        <div className="flex overflow-x-scroll pb-10 hide-scroll-bar">
-          <div className="flex flex-nowrap ml-10 ">
-            <RenderOrders orders={orders} />
-          </div>
-        </div>
-      </>
-    }
+      {isLoading ? <div className="text-white text-center">Loading...</div> : 
+        <>
+          { orders.length === 0 ? (
+            <div className="text-white text-center pt-4 text-2xl font-bold">There are no orders for today.</div>
+          ) : (
+            <>
+              <div className="text-white z-35 font-bold text-center text-xl">Orders To Be Picked Up Today, <OrderDate orderDate={date} /> </div>
+              <div className="flex flex-nowrap lg:ml-40 md:ml-20 ml-10 ">
+                <RenderOrders orders={orders} />
+              </div>
+            </>
+            )
+          }
+        </>
+      }
     </>
-
   );
 }
 
