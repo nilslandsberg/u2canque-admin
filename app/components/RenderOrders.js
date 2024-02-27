@@ -16,7 +16,7 @@ const RenderOrders = ({ orders }) => {
             <div>Customer: {order.customer.firstName} {order.customer.lastName}</div>
             <div>Phone: {order.customer.phone}</div>
             <div>E-mail: {order.customer.email}</div>
-            <div>Date: <OrderDate orderDate={order.date} /></div>
+            <div>Date: { order.date ? <OrderDate orderDate={order.date} /> : order.pickUpDate}</div>
             <div>Pickup Time: {order.pickUpTime}</div>
           </div>
           <div className="border-b-2 border-gray-300 mb-2"></div>

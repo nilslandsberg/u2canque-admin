@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { getOrdersForNextBusinessDay } from '../utils/getOrdersForNextBusinessDay';
 import RenderOrders from './RenderOrders';
+import { getEasterOrders } from '../utils/getEasterOrders';
 
 const EasterOrders = () => {
   const [orders, setOrders] = useState([]);
@@ -14,9 +14,9 @@ const EasterOrders = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await getOrdersForNextBusinessDay();
-        setOrders(response.orders);
-        setDate(response.orders[0].date); 
+        const response = await getEasterOrders();
+        setOrders(response.easterOrders);
+        setDate(response.easterOrders[0].pickUpDate); 
         setIsLoading(false);
       } catch (error) {
         console.error('Error fetching orders: ', error);
