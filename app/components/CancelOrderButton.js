@@ -1,13 +1,18 @@
 import React from 'react'
 import { cancelOrder } from '../utils/cancelOrder';
+import { cancelHolidayOrder } from '../utils/cancelHolidayOrder';
 
-const CancelButton = ({ orderId }) => {
+const CancelButton = ({ orderId, holiday }) => {
 
   const handleClick = (id) => {
     const confirmCancel = window.confirm('Are you sure you want to cancel this order?');
-
+    
     if (confirmCancel) {
-      cancelOrder(id);
+      if (holiday) {
+        cancelHolidayOrder(id);
+      } else {
+        cancelOrder(id);
+      }
     }
   }
   

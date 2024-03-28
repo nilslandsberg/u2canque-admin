@@ -24,7 +24,7 @@ const RenderOrders = ({ orders }) => {
             <RenderOrderItems items={order.items} />
           </div>
           <div className="mt-auto">
-            <CancelButton orderId={order._id} />
+            <CancelButton orderId={order._id} holiday={order.holiday}/>
           </div>
         </div>
       ))}
