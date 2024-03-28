@@ -18,6 +18,7 @@ const RenderOrders = ({ orders }) => {
             <div>E-mail: {order.customer.email}</div>
             <div>Date: { order.date ? <OrderDate orderDate={order.date} /> : order.pickUpDate}</div>
             <div>Pickup Time: {order.pickUpTime}</div>
+            <div>Order Total: ${order.orderTotal}</div>
           </div>
           <div className="border-b-2 border-gray-300 mb-2"></div>
           <div className="flex-grow">
