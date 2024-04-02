@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
+import authService from '../utils/auth-service';
 
 const LoginForm = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
@@ -12,9 +13,9 @@ const LoginForm = () => {
 
   const onSubmit = async (data) => {
     try {
-      console.log(errors)
+      console.log(data)
       setLoading(true);
-      await login(data);
+      await authService.login(data);
       setLoading(false);
     } catch (error) {
       console.error("Error logging in: ", error)

@@ -1,10 +1,9 @@
 import axios from 'axios';
 
-const API_URL = "https://u2canque-server.onrender.com/api/login";
+const API_URL = "http://localhost:4000/api/login";
 
-const signup = (username, email, password) => {
+const signup = (email, password) => {
   const signUpRequest = { 
-    username: username,
     email: email,
     password: password,
   }
@@ -13,9 +12,11 @@ const signup = (username, email, password) => {
  
 };
 
-const login = (email, password) => {
-  return axios.post(API_URL + "login", {
-    username: username,
+const login = (data) => {
+  const { email, password } = data;
+
+  return axios.post(API_URL, {
+    email: email,
     password: password
   })
   .then((response) => {
