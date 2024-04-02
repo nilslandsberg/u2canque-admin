@@ -1,6 +1,8 @@
+import { auth } from "./auth";
 import OrdersForToday from "./components/OrdersForToday";
 
-export default function Home() {
+export default async function Home() {
+
   return (
     <>
       <main>
