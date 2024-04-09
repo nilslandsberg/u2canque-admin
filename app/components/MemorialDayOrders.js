@@ -1,52 +1,49 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { getOrdersForToday } from '../utils/getOrdersForToday';
 import RenderOrders from './RenderOrders';
-import OrderDate from './OrderDate';
-import { useRouter } from 'next/navigation';
+import { getMemorialDayOrders } from '../utils/getMemorialDayOrders';
 
-const OrdersForToday = () => {
+const MemorialDayOrders = () => {
   const [orders, setOrders] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [date, setDate] = useState("");
 
-  const router = useRouter();
+  const currentYear = new Date().getFullYear();
+  
   const user = JSON.parse(localStorage.getItem('user'));
   let token = ""
 
   if (user) {
     token = user.token;
   }
-
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await getOrdersForToday(token);
-        setOrders(response.orders);
-        if (response.orders.length > 0) {
-          setDate(response.orders[0].date); 
+        const response = await getMemorialDayOrders(token);
+        setOrders(response.memorialDayOrders);
+        if (response.memorialDayOrders.length > 0) {
+          setDate(response.memorialDayOrders[0].pickUpDate); 
         }
         setIsLoading(false);
       } catch (error) {
         console.error('Error fetching orders: ', error);
-        router.push('/login')
+        setIsLoading(false);
       }
     };
     
     fetchData();
   }, [])
   
-
   return (
     <>
       {isLoading ? <div className="text-white text-center">Loading...</div> : 
         <>
           { orders.length === 0 ? (
-            <div className="text-white text-center pt-4 text-2xl font-bold">There are no orders for today.</div>
+            <div className="text-white text-center pt-4 text-2xl font-bold">There are no orders for Memorial Day.</div>
           ) : (
             <>
-              <div className="text-white z-35 font-bold text-center text-xl">Orders To Be Picked Up Today, <OrderDate orderDate={date} /> </div>
+              <div className="text-white z-35 font-bold text-center text-xl">Orders For Memorial Day {currentYear}</div>
               <div className="flex flex-nowrap lg:ml-40 md:ml-20 ml-10 ">
                 <RenderOrders orders={orders} />
               </div>
@@ -59,4 +56,4 @@ const OrdersForToday = () => {
   );
 }
 
-export default OrdersForToday;
+export default MemorialDayOrders;

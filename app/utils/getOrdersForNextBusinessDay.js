@@ -1,11 +1,12 @@
-export function getOrdersForNextBusinessDay() {
+export function getOrdersForNextBusinessDay(token) {
   const apiEndpoint = 'https://u2canque-server.onrender.com/api/order/nextBusinessDay';
-
+  const bearerToken = token;
   return fetch(apiEndpoint, {
     method: 'GET',
     headers: new Headers({
       'Content-Type': 'application/json',
-      'Accept': 'application/json'
+      'Accept': 'application/json',
+      'Authorization': 'Bearer ' + bearerToken
     }),
   })
   .then(response => {

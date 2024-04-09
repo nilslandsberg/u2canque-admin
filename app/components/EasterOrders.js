@@ -10,13 +10,21 @@ const EasterOrders = () => {
   const [date, setDate] = useState("");
 
   const currentYear = new Date().getFullYear();
+  
+  const user = JSON.parse(localStorage.getItem('user'));
+  let token = ""
 
+  if (user) {
+    token = user.token;
+  }
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await getEasterOrders();
+        const response = await getEasterOrders(token);
         setOrders(response.easterOrders);
-        setDate(response.easterOrders[0].pickUpDate); 
+        if (response.easterOrders.length > 0) {
+          setDate(response.easterOrders[0].pickUpDate); 
+        }
         setIsLoading(false);
       } catch (error) {
         console.error('Error fetching orders: ', error);

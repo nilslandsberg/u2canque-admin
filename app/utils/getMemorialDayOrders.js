@@ -1,6 +1,6 @@
-export function getOrdersForToday(token) {
-  const apiEndpoint = 'https://u2canque-server.onrender.com/api/order/today';
-  console.log("token: ", token)
+export function getMemorialDayOrders(token) {
+  const apiEndpoint = 'https://u2canque-server.onrender.com/api/order/holiday/memorial-day';
+
   return fetch(apiEndpoint, {
     method: 'GET',
     headers: new Headers({
@@ -11,12 +11,13 @@ export function getOrdersForToday(token) {
   })
   .then(response => {
     if (!response.ok) {
+      console.log(response)
       throw new Error('Network response was not ok');
     }
     return response.json(); // Parse the JSON data
   })
   .then(data => {
-    console.log("Data:", data); // Log the parsed data
+    console.log(data)
     return data; // Return the parsed data
   })
   .catch(error => {

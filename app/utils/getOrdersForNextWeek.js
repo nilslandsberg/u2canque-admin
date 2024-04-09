@@ -1,11 +1,12 @@
-export function getOrdersForNextWeek() {
+export function getOrdersForNextWeek(token) {
   const apiEndpoint = 'https://u2canque-server.onrender.com/api/order/nextWeek';
 
   return fetch(apiEndpoint, {
     method: 'GET',
     headers: new Headers({
       'Content-Type': 'application/json',
-      'Accept': 'application/json'
+      'Accept': 'application/json',
+      'Authorization': 'Bearer ' + token
     }),
   })
   .then(response => {

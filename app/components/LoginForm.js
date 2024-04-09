@@ -16,9 +16,10 @@ const LoginForm = () => {
       console.log(data)
       setLoading(true);
       await authService.login(data);
-      setLoading(false);
+      router.push('/');
     } catch (error) {
       console.error("Error logging in: ", error)
+      setLoading(false);
     }
 
   }

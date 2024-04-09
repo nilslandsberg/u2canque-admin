@@ -1,17 +1,26 @@
+"use client";
+
 import React from 'react'
 import { cancelOrder } from '../utils/cancelOrder';
 import { cancelHolidayOrder } from '../utils/cancelHolidayOrder';
 
 const CancelButton = ({ orderId, holiday }) => {
+  const user = JSON.parse(localStorage.getItem('user'));
+  let token = ""
+
+  if (user) {
+    token = user.token;
+    
+  }
 
   const handleClick = (id) => {
     const confirmCancel = window.confirm('Are you sure you want to cancel this order?');
     
     if (confirmCancel) {
       if (holiday) {
-        cancelHolidayOrder(id);
+        cancelHolidayOrder(id, token);
       } else {
-        cancelOrder(id);
+        cancelOrder(id, token);
       }
     }
   }

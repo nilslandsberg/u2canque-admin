@@ -3,20 +3,29 @@
 import React, { useEffect, useState } from 'react';
 import { getOrdersForNextWeek } from '../utils/getOrdersForNextWeek';
 import RenderOrders from './RenderOrders';
+import { useRouter } from 'next/navigation';
 
 const OrdersForNextWeek = () => {
   const [orders, setOrders] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  const router = useRouter();
+  const user = JSON.parse(localStorage.getItem('user'));
+  let token = ""
+
+  if (user) {
+    token = user.token;
+  }
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await getOrdersForNextWeek();
+        const response = await getOrdersForNextWeek(token);
         setOrders(response.orders);
         setIsLoading(false);
       } catch (error) {
         console.error('Error fetching orders: ', error);
-        setIsLoading(false);
+        router.push('login');
       }
     };
     
