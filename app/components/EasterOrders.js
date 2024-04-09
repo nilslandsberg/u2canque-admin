@@ -11,13 +11,15 @@ const EasterOrders = () => {
 
   const currentYear = new Date().getFullYear();
   
-  const user = JSON.parse(localStorage.getItem('user'));
-  let token = ""
 
-  if (user) {
-    token = user.token;
-  }
   useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    let token = ""
+  
+    if (user) {
+      token = user.token;
+    }
+    
     const fetchData = async () => {
       try {
         const response = await getEasterOrders(token);

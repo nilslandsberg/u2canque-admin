@@ -12,14 +12,15 @@ const OrdersForNextBusinessDay = () => {
   const [date, setDate] = useState("");
 
   const router = useRouter();
-  const user = JSON.parse(localStorage.getItem('user'));
-  let token = ""
-
-  if (user) {
-    token = user.token;
-  }
 
   useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    let token = ""
+
+    if (user) {
+      token = user.token;
+    }
+
     const fetchData = async () => {
       try {
         const response = await getOrdersForNextBusinessDay(token);
