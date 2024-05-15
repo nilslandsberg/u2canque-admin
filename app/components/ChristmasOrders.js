@@ -2,10 +2,10 @@
 
 import React, { useEffect, useState } from 'react';
 import RenderOrders from './RenderOrders';
-import { getEasterOrders } from '../utils/getEasterOrders';
+import { getChristmasOrders } from '../utils/getChristmasOrders';
 import { useRouter } from 'next/navigation';
 
-const EasterOrders = () => {
+const ChristmasOrders = () => {
   const [orders, setOrders] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [date, setDate] = useState("");
@@ -23,10 +23,10 @@ const EasterOrders = () => {
     
     const fetchData = async () => {
       try {
-        const response = await getEasterOrders(token);
-        setOrders(response.easterOrders);
-        if (response.easterOrders.length > 0) {
-          setDate(response.easterOrders[0].pickUpDate); 
+        const response = await getChristmasOrders(token);
+        setOrders(response.christmasOrders);
+        if (response.christmasOrders.length > 0) {
+          setDate(response.christmasOrders[0].pickUpDate); 
         }
         setIsLoading(false);
       } catch (error) {
@@ -43,10 +43,10 @@ const EasterOrders = () => {
       {isLoading ? <div className="text-white text-center">Loading...</div> : 
         <>
           { orders.length === 0 ? (
-            <div className="text-white text-center pt-4 text-2xl font-bold">There are no orders for Easter.</div>
+            <div className="text-white text-center pt-4 text-2xl font-bold">There are no orders for Christmas.</div>
           ) : (
             <>
-              <div className="text-white z-35 font-bold text-center text-xl">Orders For Easter {currentYear}</div>
+              <div className="text-white z-35 font-bold text-center text-xl">Orders For Christmas {currentYear}</div>
               <div className="flex flex-nowrap lg:ml-40 md:ml-20 ml-10 ">
                 <RenderOrders orders={orders} />
               </div>
@@ -59,4 +59,4 @@ const EasterOrders = () => {
   );
 }
 
-export default EasterOrders;
+export default ChristmasOrders;
