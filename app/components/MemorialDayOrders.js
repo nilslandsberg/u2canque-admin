@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import RenderOrders from './RenderOrders';
 import { getMemorialDayOrders } from '../utils/getMemorialDayOrders';
+import { useRouter } from 'next/navigation';
 
 const MemorialDayOrders = () => {
   const [orders, setOrders] = useState([]);
@@ -10,7 +11,7 @@ const MemorialDayOrders = () => {
   const [date, setDate] = useState("");
 
   const currentYear = new Date().getFullYear();
-  
+  const router = useRouter();
  
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('user'));
@@ -30,7 +31,7 @@ const MemorialDayOrders = () => {
         setIsLoading(false);
       } catch (error) {
         console.error('Error fetching orders: ', error);
-        setIsLoading(false);
+        router.push('/login');
       }
     };
     
