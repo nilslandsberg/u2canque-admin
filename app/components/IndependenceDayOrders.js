@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import RenderOrders from './RenderOrders';
-import { getIndependenceDayOrders } from '../utils/getMemorialDayOrders';
+import { getIndependenceDayOrders } from '../utils/getIndependenceDayOrders';
 import { useRouter } from 'next/navigation';
 
 const IndependenceDayOrders = () => {

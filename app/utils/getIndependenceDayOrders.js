@@ -1,4 +1,4 @@
-export function getMemorialDayOrders(token) {
+export function getIndependenceDayOrders(token) {
   const apiEndpoint = 'https://u2canque-server.onrender.com/api/order/holiday/independence-day';
 
   return fetch(apiEndpoint, {
