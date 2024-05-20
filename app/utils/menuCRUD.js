@@ -18,20 +18,29 @@ export const getAppetizers = async (token) => {
 };
 
 export const createAppetizer = async (token, appetizer) => {
-  const response = await fetch(`${apiUrl}/appetizers`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`,
-    },
-    body: JSON.stringify(appetizer),
-  });
+  try {
+    console.log('createAppetizer called with appetizer:', appetizer);
 
-  if (!response.ok) {
-    throw new Error('Failed to create appetizer');
+    const response = await fetch(`${apiUrl}/appetizers`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify(appetizer),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error('Failed to create appetizer:', errorData);
+      throw new Error('Failed to create appetizer');
+    }
+
+    return response.json();
+  } catch (error) {
+    console.error('Error creating appetizer:', error);
+    throw error;
   }
-
-  return response.json();
 };
 
 export const updateAppetizer = async (token, appetizerId, updatedAppetizer) => {
@@ -43,7 +52,7 @@ export const updateAppetizer = async (token, appetizerId, updatedAppetizer) => {
     },
     body: JSON.stringify(updatedAppetizer),
   });
-
+  
   if (!response.ok) {
     throw new Error('Failed to update appetizer');
   }
