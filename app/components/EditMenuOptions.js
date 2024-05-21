@@ -10,11 +10,11 @@ import RenderAppetizers from './RenderAppetizers';
 // import RenderModifiers from './RenderModifiers'; 
 import { 
   getAppetizers, createAppetizer, updateAppetizer, deleteAppetizer, 
-  // getLunches, createLunch, updateLunch, deleteLunch,
-  // getBulkBbq, createBulkBbq, updateBulkBbq, deleteBulkBbq,
-  // getBulkSides, createBulkSides, updateBulkSides, deleteBulkSides,
-  // getHolidays, createHoliday, updateHoliday, deleteHoliday,
-  // getModifiers, updateModifiers
+  getLunches, createLunch, updateLunch, deleteLunch,
+  getBulkBbq, createBulkBbq, updateBulkBbq, deleteBulkBbq,
+  getBulkSides, createBulkSides, updateBulkSides, deleteBulkSides,
+  getHolidays, createHoliday, updateHoliday, deleteHoliday,
+  getModifiers, updateModifiers
 } from '../utils/menuCRUD';
 
 const EditMenuOptions = () => {
@@ -183,37 +183,37 @@ const EditMenuOptions = () => {
           <hr className="border-gray-600 my-8" />
           {/* Holiday Items Section */}
           <div className="text-2xl font-bold text-left my-8 cursor-pointer flex justify-between items-center" onClick={() => setIsHolidaysSectionOpen(!isHolidaysSectionOpen)} >
-              <span>HOLIDAY ITEMS</span>
-              <span>{isHolidaysSectionOpen ? '▴' : '▾'}</span>
-            </div>
-            {isHolidaysSectionOpen && (
-              <>
-                <RenderHolidays
-                  holidays={holidays}
-                  createHoliday={createHoliday}
-                  updateHoliday={updateHoliday}
-                  deleteHoliday={deleteHoliday}
-                  handleRemoveHoliday={handleRemoveHoliday}
-                />
-              </>
-            )}
-            <hr className="border-gray-600 my-8" />
-            {/* Modifiers Section */}
-            <div className="text-2xl font-bold text-left my-8 cursor-pointer flex justify-between items-center" onClick={() => setIsModifiersSectionOpen(!isModifiersSectionOpen)} >
-              <span>MODIFIERS (sides & bread options)</span>
-              <span>{isModifiersSectionOpen ? '▴' : '▾'}</span>
-            </div>
-            {isModifiersSectionOpen && (
-              <>
-                <RenderModifiers
-                  modifiers={modifiers}
-                  updateModifiers={updateModifiers}
-                />
-              </>
-            )}
+            <span>HOLIDAY ITEMS</span>
+            <span>{isHolidaysSectionOpen ? '▴' : '▾'}</span>
           </div>
-        </>
-      )}
+          {isHolidaysSectionOpen && (
+            <>
+              <RenderHolidays
+                holidays={holidays}
+                createHoliday={createHoliday}
+                updateHoliday={updateHoliday}
+                deleteHoliday={deleteHoliday}
+                handleRemoveHoliday={handleRemoveHoliday}
+              />
+            </>
+          )}
+          <hr className="border-gray-600 my-8" />
+          {/* Modifiers Section */}
+          <div className="text-2xl font-bold text-left my-8 cursor-pointer flex justify-between items-center" onClick={() => setIsModifiersSectionOpen(!isModifiersSectionOpen)} >
+            <span>MODIFIERS (sides & bread options)</span>
+            <span>{isModifiersSectionOpen ? '▴' : '▾'}</span>
+          </div>
+          {isModifiersSectionOpen && (
+            <>
+              <RenderModifiers
+                modifiers={modifiers}
+                updateModifiers={updateModifiers}
+              />
+            </>
+          )}
+        </div>
+      </>
+    )}
     </>
   );
 };
