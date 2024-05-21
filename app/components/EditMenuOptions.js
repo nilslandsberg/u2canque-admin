@@ -7,7 +7,7 @@ import RenderAppetizers from './RenderAppetizers';
 // import RenderBulkBbq from './RenderBulkBbq'; 
 // import RenderBulkSides from './RenderBulkSides'; 
 // import RenderHolidays from './RenderHolidays'; 
-// import RenderModifiers from './RenderModifiers'; 
+import RenderModifiers from './RenderModifiers'; 
 import { 
   getAppetizers, createAppetizer, updateAppetizer, deleteAppetizer, 
   getLunches, createLunch, updateLunch, deleteLunch,
@@ -28,7 +28,7 @@ const EditMenuOptions = () => {
   const router = useRouter();
 
   // State variables for controlling section visibility
-  const [isEditingTipsSectionOpen, setIsEditingTipsSectionOpen] = useState(false);
+  const [isEditingTipsSectionOpen, setIsEditingTipsSectionOpen] = useState(true);
   const [isAppetizersSectionOpen, setIsAppetizersSectionOpen] = useState(false);
   const [isLunchSectionOpen, setIsLunchSectionOpen] = useState(false);
   const [isBulkBbqSectionOpen, setIsBulkBbqSectionOpen] = useState(false);
@@ -42,33 +42,77 @@ const EditMenuOptions = () => {
     if (user) {
       token = user.token;
     }
-
-    const fetchData = async () => {
+  
+    const fetchAppetizers = async () => {
       try {
-        const [fetchedAppetizers, fetchedLunches, fetchedBulkBbq, fetchedBulkSides, fetchedHolidays, fetchedModifiers] = await Promise.all([
-          getAppetizers(token),
-          // getLunches(token),
-          // getBulkBbq(token),
-          // getBulkSides(token),
-          // getHolidays(token),
-          // getModifiers(token)
-        ]);
+        const fetchedAppetizers = await getAppetizers(token);
         setAppetizers(fetchedAppetizers);
-        // setLunches(fetchedLunches);
-        // setBulkBbq(fetchedBulkBbq);
-        // setBulkSides(fetchedBulkSides);
-        // setHolidays(fetchedHolidays);
-        // setModifiers(fetchedModifiers);
       } catch (error) {
-        console.error('Error fetching menu items: ', error);
-        router.push('login');
-      } finally {
-        setIsLoading(false);
+        console.error('Error fetching appetizers: ', error);
       }
     };
-
+  
+    const fetchLunches = async () => {
+      try {
+        const fetchedLunches = await getLunches(token);
+        setLunches(fetchedLunches);
+      } catch (error) {
+        console.error('Error fetching lunches: ', error);
+      }
+    };
+  
+    const fetchBulkBbq = async () => {
+      try {
+        const fetchedBulkBbq = await getBulkBbq(token);
+        setBulkBbq(fetchedBulkBbq);
+      } catch (error) {
+        console.error('Error fetching bulk BBQ: ', error);
+      }
+    };
+  
+    const fetchBulkSides = async () => {
+      try {
+        const fetchedBulkSides = await getBulkSides(token);
+        setBulkSides(fetchedBulkSides);
+      } catch (error) {
+        console.error('Error fetching bulk sides: ', error);
+      }
+    };
+  
+    const fetchHolidays = async () => {
+      try {
+        const fetchedHolidays = await getHolidays(token);
+        setHolidays(fetchedHolidays);
+      } catch (error) {
+        console.error('Error fetching holidays: ', error);
+      }
+    };
+  
+    const fetchModifiers = async () => {
+      try {
+        const fetchedModifiers = await getModifiers(token);
+        setModifiers(fetchedModifiers);
+      } catch (error) {
+        console.error('Error fetching modifiers: ', error);
+      }
+    };
+  
+    const fetchData = async () => {
+      setIsLoading(true);
+      await Promise.all([
+        fetchAppetizers(),
+        fetchLunches(),
+        fetchBulkBbq(),
+        fetchBulkSides(),
+        fetchHolidays(),
+        fetchModifiers()
+      ]);
+      setIsLoading(false);
+    };
+  
     fetchData();
   }, []);
+  
 
   const handleRemoveAppetizer = (id) => {
     setAppetizers(appetizers.filter((appetizer) => appetizer._id !== id));

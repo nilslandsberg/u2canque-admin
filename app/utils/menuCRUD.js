@@ -389,11 +389,13 @@ export const getModifiers = async (token) => {
     throw new Error('Failed to fetch modifiers');
   }
 
-  return response.json();
+  const data = await response.json();
+  // console.log('API Response for Modifiers:', data); // for testing issues with not recieving responses
+  return data;
 };
 
-export const updateModifiers = async (token, modifiersId, updatedModifiers) => {
-  const response = await fetch(`${apiUrl}/modifiers/${modifiersId}`, {
+export const updateModifiers = async (token, updatedModifiers) => {
+  const response = await fetch(`${apiUrl}/modifiers`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
