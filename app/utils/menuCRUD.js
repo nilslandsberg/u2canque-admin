@@ -408,17 +408,3 @@ export const updateModifiers = async (token, modifiersId, updatedModifiers) => {
 
   return response.json();
 };
-
-
-
-
-
-
-
-
-
-// // HOLIDAY ITEMS
-// getHolidays, createHoliday, updateHoliday, deleteHoliday,
-
-// // MODIFIERS
-// getModifiers, updateModifiers,
