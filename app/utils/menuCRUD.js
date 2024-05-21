@@ -76,8 +76,18 @@ export const deleteAppetizer = async (token, appetizerId) => {
   return response.json();
 };
 
-// LUNCH
-// BULK
-// SIDES
-// MODIFIERS
-// HOLIDAY ITEMS
+// // LUNCH
+// getLunches, createLunch, updateLunch, deleteLunch,
+
+// // BULK
+// getBulkBbq, createBulkBbq, updateBulkBbq, deleteBulkBbq,
+
+// // SIDES
+// getBulkSides, createBulkSides, updateBulkSides, deleteBulkSides,
+
+
+// // HOLIDAY ITEMS
+// getHolidays, createHoliday, updateHoliday, deleteHoliday,
+
+// // MODIFIERS
+// getModifiers, updateModifiers,
