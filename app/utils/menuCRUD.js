@@ -29,14 +29,15 @@ export const createAppetizer = async (token, appetizer) => {
       },
       body: JSON.stringify(appetizer),
     });
-
+    
     if (!response.ok) {
       const errorData = await response.json();
       console.error('Failed to create appetizer:', errorData);
       throw new Error('Failed to create appetizer');
     }
 
-    return response.json();
+    const data = await response.json();
+    return data;
   } catch (error) {
     console.error('Error creating appetizer:', error);
     throw error;

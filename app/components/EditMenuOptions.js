@@ -1,12 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import RenderAppetizers from './RenderAppetizers';
-// import RenderLunches from './RenderLunches';
-// import RenderBulkBbq from './RenderBulkBbq'; 
-// import RenderBulkSides from './RenderBulkSides'; 
-// import RenderHolidays from './RenderHolidays'; 
+import RenderMenuItems from './RenderMenuItems';
 import RenderModifiers from './RenderModifiers'; 
 import { 
   getAppetizers, createAppetizer, updateAppetizer, deleteAppetizer, 
@@ -25,114 +20,77 @@ const EditMenuOptions = () => {
   const [bulkSides, setBulkSides] = useState([]);
   const [holidays, setHolidays] = useState([]);
   const [modifiers, setModifiers] = useState([]);
-  const router = useRouter();
 
   // State variables for controlling section visibility
-  const [isEditingTipsSectionOpen, setIsEditingTipsSectionOpen] = useState(true);
-  const [isAppetizersSectionOpen, setIsAppetizersSectionOpen] = useState(false);
+  const [isEditingTipsSectionOpen, setIsEditingTipsSectionOpen] = useState(false);
+  const [isAppetizersSectionOpen, setIsAppetizersSectionOpen] = useState(true);
   const [isLunchSectionOpen, setIsLunchSectionOpen] = useState(false);
   const [isBulkBbqSectionOpen, setIsBulkBbqSectionOpen] = useState(false);
   const [isBulkSidesSectionOpen, setIsBulkSidesSectionOpen] = useState(false);
   const [isHolidaysSectionOpen, setIsHolidaysSectionOpen] = useState(false);
   const [isModifiersSectionOpen, setIsModifiersSectionOpen] = useState(false);
 
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('user'));
-    let token = '';
-    if (user) {
-      token = user.token;
+  const fetchData = async (getData, setState, errorMessage) => {
+    try {
+      const user = JSON.parse(localStorage.getItem('user'));
+      const token = user ? user.token : '';
+      const data = await getData(token);
+      setState(data);
+    } catch (error) {
+      console.error(`Error ${errorMessage}: `, error);
     }
-  
-    const fetchAppetizers = async () => {
-      try {
-        const fetchedAppetizers = await getAppetizers(token);
-        setAppetizers(fetchedAppetizers);
-      } catch (error) {
-        console.error('Error fetching appetizers: ', error);
-      }
-    };
-  
-    const fetchLunches = async () => {
-      try {
-        const fetchedLunches = await getLunches(token);
-        setLunches(fetchedLunches);
-      } catch (error) {
-        console.error('Error fetching lunches: ', error);
-      }
-    };
-  
-    const fetchBulkBbq = async () => {
-      try {
-        const fetchedBulkBbq = await getBulkBbq(token);
-        setBulkBbq(fetchedBulkBbq);
-      } catch (error) {
-        console.error('Error fetching bulk BBQ: ', error);
-      }
-    };
-  
-    const fetchBulkSides = async () => {
-      try {
-        const fetchedBulkSides = await getBulkSides(token);
-        setBulkSides(fetchedBulkSides);
-      } catch (error) {
-        console.error('Error fetching bulk sides: ', error);
-      }
-    };
-  
-    const fetchHolidays = async () => {
-      try {
-        const fetchedHolidays = await getHolidays(token);
-        setHolidays(fetchedHolidays);
-      } catch (error) {
-        console.error('Error fetching holidays: ', error);
-      }
-    };
-  
-    const fetchModifiers = async () => {
-      try {
-        const fetchedModifiers = await getModifiers(token);
-        setModifiers(fetchedModifiers);
-      } catch (error) {
-        console.error('Error fetching modifiers: ', error);
-      }
-    };
-  
-    const fetchData = async () => {
+  };
+
+  useEffect(() => {
+    const fetchAllData = async () => {
       setIsLoading(true);
       await Promise.all([
-        fetchAppetizers(),
-        fetchLunches(),
-        fetchBulkBbq(),
-        fetchBulkSides(),
-        fetchHolidays(),
-        fetchModifiers()
+        fetchData(getAppetizers, setAppetizers, 'fetching appetizers'),
+        fetchData(getLunches, setLunches, 'fetching lunches'),
+        fetchData(getBulkBbq, setBulkBbq, 'fetching bulk BBQ'),
+        fetchData(getBulkSides, setBulkSides, 'fetching bulk sides'),
+        fetchData(getHolidays, setHolidays, 'fetching holidays'),
+        fetchData(getModifiers, setModifiers, 'fetching modifiers')
       ]);
       setIsLoading(false);
     };
   
-    fetchData();
+    fetchAllData();
   }, []);
-  
 
-  const handleRemoveAppetizer = (id) => {
-    setAppetizers(appetizers.filter((appetizer) => appetizer._id !== id));
+  // handleCreateNewItem updates local state when new items are created on server to keep parent/child states in sync
+  // this is a great canidate for using Redux, but as we're so far along and almost finished this solution is fine for now :)
+  const handleCreateNewItem = (newItem, sectionName) => {
+    switch (sectionName) {
+      case 'appetizers':
+        setAppetizers([...appetizers, newItem]);
+        break;
+      case 'lunch':
+        setLunches([...lunches, newItem]);
+        break;
+      case 'bulk':
+        setBulkBbq([...bulkBbq, newItem]);
+        break;
+      case 'sides':
+        setBulkSides([...bulkSides, newItem]);
+        break;
+      case 'holiday-items':
+        setHolidays([...holidays, newItem]);
+        break;
+      default:
+        break;
+    }
   };
 
-  const handleRemoveLunch = (id) => {
-    setLunches(lunches.filter((lunch) => lunch._id !== id));
+  const removeItem = (state, setState, id) => {
+    setState(state.filter((item) => item._id !== id));
   };
 
-  const handleRemoveBulkBbq = (id) => {
-    setBulkBbq(bulkBbq.filter((bbq) => bbq._id !== id));
-  };
-
-  const handleRemoveBulkSides = (id) => {
-    setBulkSides(bulkSides.filter((side) => side._id !== id));
-  };
-
-  const handleRemoveHoliday = (id) => {
-    setHolidays(holidays.filter((holiday) => holiday._id !== id));
-  };
+  const handleRemoveAppetizer = (id) => removeItem(appetizers, setAppetizers, id);
+  const handleRemoveLunch = (id) => removeItem(lunches, setLunches, id);
+  const handleRemoveBulkBbq = (id) => removeItem(bulkBbq, setBulkBbq, id);
+  const handleRemoveBulkSides = (id) => removeItem(bulkSides, setBulkSides, id);
+  const handleRemoveHoliday = (id) => removeItem(holidays, setHolidays, id);
 
   return (
     <>
@@ -142,119 +100,153 @@ const EditMenuOptions = () => {
       <>
         <div className="text-white">
           <h1 className='font-bold text-xl text-center'>Edit Menu Options</h1>
+
           {/* Editing Tips Dropdown */}
-          <div className="text-l text-left my-2 cursor-pointer flex justify-center" onClick={() => setIsEditingTipsSectionOpen(!isEditingTipsSectionOpen)} >
-            <span>Editing Tips</span>
-            <span>{isEditingTipsSectionOpen ? '▴' : '▾'}</span>
-          </div>
-          {isEditingTipsSectionOpen && (
-            <div className="text-center">
-              <h6>- Click on a section header to expand or hide those menu items.</h6>
-              <h6>- Click on a menu item to edit or delete that item, click save to update.</h6>
-              <h6>- Ensure any upcharge options include the price (example: Ranch +$0.50).</h6>
-              <h6>- If you encounter issues while editing, saving, or deleting try refreshing page.</h6>
+          <div>
+            <div className="text-l text-left my-2 cursor-pointer flex justify-center" onClick={() => setIsEditingTipsSectionOpen(!isEditingTipsSectionOpen)} >
+              <span>Editing Tips</span>
+              <span>{isEditingTipsSectionOpen ? '▴' : '▾'}</span>
             </div>
-          )}
-          <br />
-          <hr className="border-gray-600 my-4" />
+            {isEditingTipsSectionOpen && (
+              <div className="text-center">
+                <h6>- Click on a section header to expand or hide those menu items.</h6>
+                <h6>- Click on a menu item to edit or delete that item, click save to update.</h6>
+                <h6>- Ensure any upcharge options include the price (example: Ranch +$0.50).</h6>
+                <h6>- If you encounter issues while editing, saving, or deleting try refreshing page.</h6>
+              </div>
+            )}
+            <br />
+            <hr className="border-gray-600 my-4" />
+          </div>
+
           {/* Appetizers Section */}
-          <div className="text-2xl font-bold text-left my-8 cursor-pointer flex justify-between items-center" onClick={() => setIsAppetizersSectionOpen(!isAppetizersSectionOpen)} >
-            <span>APPETIZERS</span>
-            <span>{isAppetizersSectionOpen ? '▴' : '▾'}</span>
+          <div>
+            <div className="text-2xl font-bold text-left my-8 cursor-pointer flex justify-between items-center" onClick={() => setIsAppetizersSectionOpen(!isAppetizersSectionOpen)} >
+              <span>APPETIZERS</span>
+              <span>{isAppetizersSectionOpen ? '▴' : '▾'}</span>
+            </div>
+            {isAppetizersSectionOpen && (
+              <>
+                <RenderMenuItems
+                  menuItems={appetizers}
+                  createItem={createAppetizer}
+                  updateItem={updateAppetizer}
+                  deleteItem={deleteAppetizer}
+                  handleRemoveItem={handleRemoveAppetizer}
+                  handleCreateNewItem={handleCreateNewItem}
+                  sectionName="appetizers"
+                  options={['sauce', 'dressing']}
+                />
+              </>
+            )}
+            <hr className="border-gray-600 my-8" />
           </div>
-          {isAppetizersSectionOpen && (
-            <>
-              <RenderAppetizers
-                appetizers={appetizers}
-                createAppetizer={createAppetizer}
-                updateAppetizer={updateAppetizer}
-                deleteAppetizer={deleteAppetizer}
-                handleRemoveAppetizer={handleRemoveAppetizer}
-              />
-            </>
-          )}
-          <hr className="border-gray-600 my-8" />
+
           {/* Lunch Section */}
-          <div className="text-2xl font-bold text-left my-8 cursor-pointer flex justify-between items-center" onClick={() => setIsLunchSectionOpen(!isLunchSectionOpen)} >
-            <span>LUNCH</span>
-            <span>{isLunchSectionOpen ? '▴' : '▾'}</span>
+          <div>
+            <div className="text-2xl font-bold text-left my-8 cursor-pointer flex justify-between items-center" onClick={() => setIsLunchSectionOpen(!isLunchSectionOpen)} >
+              <span>LUNCH</span>
+              <span>{isLunchSectionOpen ? '▴' : '▾'}</span>
+            </div>
+            {isLunchSectionOpen && (
+              <>
+                <RenderMenuItems
+                  menuItems={lunches}
+                  createItem={createLunch}
+                  updateItem={updateLunch}
+                  deleteItem={deleteLunch}
+                  handleRemoveItem={handleRemoveLunch}
+                  handleCreateNewItem={handleCreateNewItem}
+                  sectionName="lunch"
+                  options={['sauce', 'chicken', 'toppings']}
+                />
+              </>
+            )}
+            <hr className="border-gray-600 my-8" />
           </div>
-          {isLunchSectionOpen && (
-            <>
-              <RenderLunches
-                lunches={lunches}
-                createLunch={createLunch}
-                updateLunch={updateLunch}
-                deleteLunch={deleteLunch}
-                handleRemoveLunch={handleRemoveLunch}
-              />
-            </>
-          )}
-          <hr className="border-gray-600 my-8" />
+
           {/* Bulk BBQ Section */}
-          <div className="text-2xl font-bold text-left my-8 cursor-pointer flex justify-between items-center" onClick={() => setIsBulkBbqSectionOpen(!isBulkBbqSectionOpen)} >
-            <span>BULK BBQ</span>
-            <span>{isBulkBbqSectionOpen ? '▴' : '▾'}</span>
+          <div>
+            <div className="text-2xl font-bold text-left my-8 cursor-pointer flex justify-between items-center" onClick={() => setIsBulkBbqSectionOpen(!isBulkBbqSectionOpen)} >
+              <span>BULK BBQ</span>
+              <span>{isBulkBbqSectionOpen ? '▴' : '▾'}</span>
+            </div>
+            {isBulkBbqSectionOpen && (
+              <>
+                <RenderMenuItems
+                  menuItems={bulkBbq}
+                  createItem={createBulkBbq}
+                  updateItem={updateBulkBbq}
+                  deleteItem={deleteBulkBbq}
+                  handleRemoveItem={handleRemoveBulkBbq}
+                  handleCreateNewItem={handleCreateNewItem}
+                  sectionName="bulk"
+                />
+              </>
+            )}
+            <hr className="border-gray-600 my-8" />
+
           </div>
-          {isBulkBbqSectionOpen && (
-            <>
-              <RenderBulkBbq
-                bulkBbq={bulkBbq}
-                createBulkBbq={createBulkBbq}
-                updateBulkBbq={updateBulkBbq}
-                deleteBulkBbq={deleteBulkBbq}
-                handleRemoveBulkBbq={handleRemoveBulkBbq}
-              />
-            </>
-          )}
-          <hr className="border-gray-600 my-8" />
+
           {/* Bulk Sides Section */}
-          <div className="text-2xl font-bold text-left my-8 cursor-pointer flex justify-between items-center" onClick={() => setIsBulkSidesSectionOpen(!isBulkSidesSectionOpen)} >
-            <span>BULK SIDES</span>
-            <span>{isBulkSidesSectionOpen ? '▴' : '▾'}</span>
+          <div>
+            <div className="text-2xl font-bold text-left my-8 cursor-pointer flex justify-between items-center" onClick={() => setIsBulkSidesSectionOpen(!isBulkSidesSectionOpen)} >
+              <span>BULK SIDES</span>
+              <span>{isBulkSidesSectionOpen ? '▴' : '▾'}</span>
+            </div>
+            {isBulkSidesSectionOpen && (
+              <>
+                <RenderMenuItems
+                  menuItems={bulkSides}
+                  createItem={createBulkSides}
+                  updateItem={updateBulkSides}
+                  deleteItem={deleteBulkSides}
+                  handleRemoveItem={handleRemoveBulkSides}
+                  handleCreateNewItem={handleCreateNewItem}
+                  sectionName="sides"
+                />
+              </>
+            )}
+            <hr className="border-gray-600 my-8" />
           </div>
-          {isBulkSidesSectionOpen && (
-            <>
-              <RenderBulkSides
-                bulkSides={bulkSides}
-                createBulkSides={createBulkSides}
-                updateBulkSides={updateBulkSides}
-                deleteBulkSides={deleteBulkSides}
-                handleRemoveBulkSides={handleRemoveBulkSides}
-              />
-            </>
-          )}
-          <hr className="border-gray-600 my-8" />
+
           {/* Holiday Items Section */}
-          <div className="text-2xl font-bold text-left my-8 cursor-pointer flex justify-between items-center" onClick={() => setIsHolidaysSectionOpen(!isHolidaysSectionOpen)} >
-            <span>HOLIDAY ITEMS</span>
-            <span>{isHolidaysSectionOpen ? '▴' : '▾'}</span>
+          <div>
+            <div className="text-2xl font-bold text-left my-8 cursor-pointer flex justify-between items-center" onClick={() => setIsHolidaysSectionOpen(!isHolidaysSectionOpen)} >
+              <span>HOLIDAY ITEMS</span>
+              <span>{isHolidaysSectionOpen ? '▴' : '▾'}</span>
+            </div>
+            {isHolidaysSectionOpen && (
+              <>
+                <RenderMenuItems
+                  menuItems={holidays}
+                  createItem={createHoliday}
+                  updateItem={updateHoliday}
+                  deleteItem={deleteHoliday}
+                  handleRemoveItem={handleRemoveHoliday}
+                  handleCreateNewItem={handleCreateNewItem}
+                  sectionName="holiday-items"
+                />
+              </>
+            )}
+            <hr className="border-gray-600 my-8" />
           </div>
-          {isHolidaysSectionOpen && (
-            <>
-              <RenderHolidays
-                holidays={holidays}
-                createHoliday={createHoliday}
-                updateHoliday={updateHoliday}
-                deleteHoliday={deleteHoliday}
-                handleRemoveHoliday={handleRemoveHoliday}
-              />
-            </>
-          )}
-          <hr className="border-gray-600 my-8" />
+          
           {/* Modifiers Section */}
-          <div className="text-2xl font-bold text-left my-8 cursor-pointer flex justify-between items-center" onClick={() => setIsModifiersSectionOpen(!isModifiersSectionOpen)} >
-            <span>MODIFIERS (sides & bread options)</span>
-            <span>{isModifiersSectionOpen ? '▴' : '▾'}</span>
+          <div>
+            <div className="text-2xl font-bold text-left my-8 cursor-pointer flex justify-between items-center" onClick={() => setIsModifiersSectionOpen(!isModifiersSectionOpen)} >
+              <span>MODIFIERS (sides & bread options)</span>
+              <span>{isModifiersSectionOpen ? '▴' : '▾'}</span>
+            </div>
+            {isModifiersSectionOpen && (
+              <>
+                <RenderModifiers
+                  modifiers={modifiers}
+                  updateModifiers={updateModifiers}
+                />
+              </>
+            )}
           </div>
-          {isModifiersSectionOpen && (
-            <>
-              <RenderModifiers
-                modifiers={modifiers}
-                updateModifiers={updateModifiers}
-              />
-            </>
-          )}
         </div>
       </>
     )}
