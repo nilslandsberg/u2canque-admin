@@ -22,24 +22,13 @@ const EditMenuOptions = () => {
   const [modifiers, setModifiers] = useState([]);
 
   // State variables for controlling section visibility
-  const [isEditingTipsSectionOpen, setIsEditingTipsSectionOpen] = useState(false);
-  const [isAppetizersSectionOpen, setIsAppetizersSectionOpen] = useState(true);
-  const [isLunchSectionOpen, setIsLunchSectionOpen] = useState(false);
+  const [isEditingTipsSectionOpen, setIsEditingTipsSectionOpen] = useState(true);
+  const [isAppetizersSectionOpen, setIsAppetizersSectionOpen] = useState(false);
+  const [isLunchSectionOpen, setIsLunchSectionOpen] = useState(true);
   const [isBulkBbqSectionOpen, setIsBulkBbqSectionOpen] = useState(false);
   const [isBulkSidesSectionOpen, setIsBulkSidesSectionOpen] = useState(false);
   const [isHolidaysSectionOpen, setIsHolidaysSectionOpen] = useState(false);
   const [isModifiersSectionOpen, setIsModifiersSectionOpen] = useState(false);
-
-  const fetchData = async (getData, setState, errorMessage) => {
-    try {
-      const user = JSON.parse(localStorage.getItem('user'));
-      const token = user ? user.token : '';
-      const data = await getData(token);
-      setState(data);
-    } catch (error) {
-      console.error(`Error ${errorMessage}: `, error);
-    }
-  };
 
   useEffect(() => {
     const fetchAllData = async () => {
@@ -57,6 +46,17 @@ const EditMenuOptions = () => {
   
     fetchAllData();
   }, []);
+
+  const fetchData = async (getData, setState, errorMessage) => {
+    try {
+      const user = JSON.parse(localStorage.getItem('user'));
+      const token = user ? user.token : '';
+      const data = await getData(token);
+      setState(data);
+    } catch (error) {
+      console.error(`Error ${errorMessage}: `, error);
+    }
+  };
 
   // handleCreateNewItem updates local state when new items are created on server to keep parent/child states in sync
   // this is a great canidate for using Redux, but as we're so far along and almost finished this solution is fine for now :)
@@ -112,7 +112,6 @@ const EditMenuOptions = () => {
                 <h6>- Click on a section header to expand or hide those menu items.</h6>
                 <h6>- Click on a menu item to edit or delete that item, click save to update.</h6>
                 <h6>- Ensure any upcharge options include the price (example: Ranch +$0.50).</h6>
-                <h6>- If you encounter issues while editing, saving, or deleting try refreshing page.</h6>
               </div>
             )}
             <br />

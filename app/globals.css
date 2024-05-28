@@ -42,10 +42,6 @@ body {
 
 input,
 textarea {
-  /* Set minimum width to avoid shrinking */
-  min-width: 500px;
-
-  /* Other styling properties */
   padding: 5px;
   border: 1px solid #ccc;
 }

@@ -38,6 +38,25 @@ const RenderMenuItems = ({
     setItemList(menuItems);
   }, [menuItems]);
 
+  const getMenuItemType = (sectionName) => {
+    switch (sectionName) {
+      case 'appetizer':
+        return 'appetizer';
+      case 'lunch':
+        return 'lunch';
+      case 'sides':
+        return 'sides';
+      case 'bulk':
+        return 'bulk';
+      case 'holiday-items':
+        return 'holiday-items';
+      default:
+        return null;
+    }
+  };
+
+  const menuItemType = getMenuItemType(sectionName);
+
   const handleEdit = (id) => {
     setEditMode(id);
     const item = itemList.find((item) => item._id === id);
@@ -84,6 +103,22 @@ const RenderMenuItems = ({
         image: editValues.image,
         description: editValues.description,
         price: formattedPrice,
+        [sectionName]: true, // Set the appropriate section flag (e.g., appetizer: true, lunch: true, etc.)
+        ...(menuItemType === 'lunch' && {
+          day: editValues.day,
+          oneSide: editValues.oneSide,
+          twoSides: editValues.twoSides,
+          bread: editValues.bread,
+        }),
+        ...(menuItemType === 'sides' && {
+          // Include side-specific properties
+        }),
+        ...(menuItemType === 'bulk' && {
+          // Include bulk-specific properties
+        }),
+        ...(menuItemType === 'holiday-items' && {
+          // Include holiday item-specific properties
+        }),
         ...(Object.keys(updatedOptions).length > 0 && { options: updatedOptions }),
       };
 
@@ -143,7 +178,22 @@ const RenderMenuItems = ({
         image: newItem.image,
         description: newItem.description,
         price: formattedPrice,
-        [sectionName]: true,
+        [sectionName]: true, // Set the appropriate section flag (e.g., appetizer: true, lunch: true, etc.)
+        ...(menuItemType === 'lunch' && {
+          day: newItem.day,
+          oneSide: newItem.oneSide,
+          twoSides: newItem.twoSides,
+          bread: newItem.bread,
+        }),
+        ...(menuItemType === 'sides' && {
+          // Include side-specific properties
+        }),
+        ...(menuItemType === 'bulk' && {
+          // Include bulk-specific properties
+        }),
+        ...(menuItemType === 'holiday-items' && {
+          // Include holiday item-specific properties
+        }),
       };
   
       const options = Object.entries(newItem)
@@ -159,7 +209,7 @@ const RenderMenuItems = ({
       };
   
       const createdItem = await createItem(token, item);
-      handleCreateNewItem(createdItem, sectionName); // Call the handleCreateNewItem function from the parent
+      handleCreateNewItem(createdItem, sectionName); // Call handleCreateNewItem func from EditMenuOptions to keep states in sync
       setItemList([...itemList, createdItem]);
       setIsAddingNew(false);
       setNewItem({
@@ -179,25 +229,25 @@ const RenderMenuItems = ({
       {itemList.map((item) => (
         <div key={item._id}>
           {editMode === item._id ? (
-            // Render input fields for editing menu item
+            // Render Editing Fields for Menu Items
             <div className="text-black mb-4">
-              <div className="font-bold text-l text-white">Name:</div>
+              <div className="font-bold text-xl text-white">Name:</div>
               <input
                 type="text"
                 value={editValues.name}
                 onChange={(e) => handleInputChange('name', e.target.value)}
                 className="font-bold text-xl w-full"
               />
-              <div className="relative my-2">
-                <span className="font-bold text-l text-white absolute top-0">Description:</span>
+              <div className="relative my-5">
+                <span className="font-bold text-xl text-white absolute top-0">Description:</span>
                 <textarea
                   value={editValues.description}
                   onChange={(e) => handleInputChange('description', e.target.value)}
                   className="mt-6 w-full h-20"
                 />
               </div>
-              <div className="my-2">
-                <div className="font-bold text-l text-white">Price:</div>
+              <div className="my-5">
+                <div className="font-bold text-xl text-white">Price:</div>
                 <input
                   className="w-1/2"
                   type="text"
@@ -209,7 +259,7 @@ const RenderMenuItems = ({
                 />
               </div>
               <div>
-                <div className="font-bold text-l text-white">Image URL:</div>
+                <div className="font-bold text-xl text-white">Image URL:</div>
                 <input
                   type="text"
                   value={editValues.image}
@@ -217,9 +267,10 @@ const RenderMenuItems = ({
                   className="text-l w-1/2"
                 />
               </div>
+
               {options.map((option) => (
-                <div className="my-3" key={option}>
-                  <h4 className="font-bold text-l text-white">{option.charAt(0).toUpperCase() + option.slice(1)}:</h4>
+                <div className="my-5" key={option}>
+                  <h4 className="font-bold text-xl text-white">{option.charAt(0).toUpperCase() + option.slice(1)}:</h4>
                   <ul>
                   {editValues[option] && editValues[option].map((value, index) => (
                     <li key={index}>
@@ -258,6 +309,123 @@ const RenderMenuItems = ({
                   </div>
                 </div>
               ))}
+
+              {/* Lunch Editing */}
+              {menuItemType === 'lunch' && (
+                <div>
+                  {/* Day of Week */}
+                  <div className="my-6">
+                    <div className="text-white">
+                      <span className="font-bold text-xl">Days Available: </span>
+                      <span className='italic'>(select one or more)</span>
+                    </div>
+                    <div className="flex flex-wrap my-3">
+                      {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday', 'Every Day'].map((day) => (
+                        <div key={day} className="flex items-center mr-4">
+                          <input
+                            type="checkbox"
+                            id={day}
+                            checked={editValues.day.includes(day)}
+                            onChange={(e) => {
+                              const updatedDays = e.target.checked
+                                ? [...editValues.day, day]
+                                : editValues.day.filter((d) => d !== day);
+                              handleInputChange('day', updatedDays);
+                            }}
+                          />
+                          <label htmlFor={day} className="ml-2 text-white">
+                            {day}
+                          </label>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Number of Sides */}
+                  <div className="my-6 w-1/2">
+                    <div className="font-bold text-xl text-white mb-2">Number of Sides:</div>
+                    <div className="flex">
+                      <div className="flex items-center mr-4">
+                        <input
+                          type="radio"
+                          id="oneSide"
+                          checked={editValues.oneSide}
+                          onChange={() => {
+                            handleInputChange('oneSide', true);
+                            handleInputChange('twoSides', false);
+                          }}
+                          className="mr-2"
+                        />
+                        <label htmlFor="oneSide" className="text-white">
+                          One Side
+                        </label>
+                      </div>
+                      <div className="flex items-center">
+                        <input
+                          type="radio"
+                          id="twoSides"
+                          checked={editValues.twoSides}
+                          onChange={() => {
+                            handleInputChange('oneSide', false);
+                            handleInputChange('twoSides', true);
+                          }}
+                          className="mr-2"
+                        />
+                        <label htmlFor="twoSides" className="text-white">
+                          Two Sides
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Bread Included */}
+                  <div className="my-6 w-1/2">
+                    <div className="font-bold text-xl text-white mb-2">Comes with Bread?</div>
+                    <div className="flex">
+                      <div className="flex items-center mr-4">
+                        <input
+                          type="radio"
+                          id="noBread"
+                          checked={!editValues.bread}
+                          onChange={() => handleInputChange('bread', false)}
+                          className="mr-2"
+                        />
+                        <label htmlFor="noBread" className="text-white">
+                          No
+                        </label>
+                      </div>
+                      <div className="flex items-center">
+                        <input
+                          type="radio"
+                          id="yesBread"
+                          checked={editValues.bread}
+                          onChange={() => handleInputChange('bread', true)}
+                          className="mr-2"
+                        />
+                        <label htmlFor="yesBread" className="text-white">
+                          Yes
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {menuItemType === 'sides' && (
+                // Render sides fields
+                <div>sides fields</div>
+              )}
+
+              {menuItemType === 'bulk' && (
+                // Render bulk fields
+                <div>bulk fields</div>
+              )}
+
+              {menuItemType === 'holiday-items' && (
+                // Render holiday item fields
+                <div>holiday fields</div>
+              )}
+
               <button
                 className="btn btn-green mt-3"
                 onClick={() => handleSave(item._id)}
@@ -269,22 +437,22 @@ const RenderMenuItems = ({
               </button>
             </div>
           ) : (
-            // Render list item for menu items
-            <div className="mb-4" onClick={() => handleEdit(item._id)}>
-              <h3 className="font-bold text-xl text-orange-400">{item.name}</h3>
-              <div className="text-white">{item.description}</div>
-              <div className="text-white font-bold">{item.price}</div>
+            // Render Lists for Menu Items
+            <div className="mb-8" onClick={() => handleEdit(item._id)}>
+              <h3 className="mb-1 font-bold text-xl text-orange-400">{item.name}</h3>
+              <div className="text-white mb-1">{item.description}</div>
+              <div className="text-white font-bold mb-3">{item.price}</div>
               {item.options &&
                 Object.entries(item.options).map(
                   ([option, values]) =>
                     values.length > 0 && (
-                      <div key={option} className="text-white indent-2">
+                      <div key={option} className="text-white indent-2 my-1">
                         <h4 className="font-bold text-l text-white">
                           {option.charAt(0).toUpperCase() + option.slice(1)}:
                         </h4>
                         <ul>
                           {values.map((value, index) => (
-                            <li key={index} className="text-white indent-4">
+                            <li key={index} className="text-white indent-4 my-1">
                               {value}
                             </li>
                           ))}
@@ -292,15 +460,41 @@ const RenderMenuItems = ({
                       </div>
                     )
                 )}
+              {menuItemType === 'lunch' && (
+                <div className="text-white indent-2 my-2">
+                  <h4 className="font-bold text-l text-white">Days Available:</h4>
+                  <ul>
+                    {item.day.map((day, index) => (
+                      <li key={index} className="text-white indent-4 my-1">
+                        {day}
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="text-white indent-2 my-2">
+                    <h4 className="font-bold text-l text-white my-1">Number of Sides:</h4>
+                    {item.oneSide ? (
+                      <div className="text-white indent-4 my-1">One Side</div>
+                    ) : item.twoSides ? (
+                      <div className="text-white indent-4 my-1">Two Sides</div>
+                    ) : (
+                      <div className="text-white indent-4 my-1">No Sides</div>
+                    )}
+                  </div>
+                  <div className="text-white indent-2 my-2">
+                    <h4 className="font-bold text-l text-white my-1">Comes with Bread?</h4>
+                    <div className="text-white indent-4 my-1">{item.bread ? 'Yes' : 'No'}</div>
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>
       ))}
 
-      {/* Render input fields for adding new menu item */}
+      {/* Render "Add New" Fields for Menu Items */}
       {isAddingNew && (
         <div className="text-black mb-4">
-          <div className="font-bold text-l text-white">Name:</div>
+          <div className="font-bold text-xl text-white">Name:</div>
           <input
             type="text"
             value={newItem.name}
@@ -308,7 +502,7 @@ const RenderMenuItems = ({
             className="font-bold text-xl w-full"
           />
           <div className="relative my-2">
-            <span className="font-bold text-l text-white absolute top-0">Description:</span>
+            <span className="font-bold text-xl text-white absolute top-0">Description:</span>
             <textarea
               value={newItem.description}
               onChange={(e) => setNewItem({ ...newItem, description: e.target.value })}
@@ -316,7 +510,7 @@ const RenderMenuItems = ({
             />
           </div>
           <div className="my-2">
-            <div className="font-bold text-l text-white">Price:</div>
+            <div className="font-bold text-xl text-white">Price:</div>
             <input
               className="w-1/2"
               type="text"
@@ -328,17 +522,17 @@ const RenderMenuItems = ({
             />
           </div>
           <div>
-            <div className="font-bold text-l text-white">Image URL:</div>
+            <div className="font-bold text-xl text-white">Image URL:</div>
             <input
               type="text"
               value={newItem.image}
               onChange={(e) => setNewItem({ ...newItem, image: e.target.value })}
-              className="text-l w-1/2"
+              className="text-xl w-1/2"
             />
           </div>
           {options.map((option) => (
             <div className="my-3" key={option}>
-              <h4 className="font-bold text-l text-white">{option.charAt(0).toUpperCase() + option.slice(1)}:</h4>
+              <h4 className="font-bold text-xl text-white">{option.charAt(0).toUpperCase() + option.slice(1)}:</h4>
               <ul>
                 {newItem[option].map((value, index) => (
                   <li key={index}>
