@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import MenuItemForm from './MenuItemForm';
 import { capitalizeFirstLetter } from '../utils/stringManipulation';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPen } from '@fortawesome/free-solid-svg-icons';
 
 const RenderMenuItems = ({
   menuItems,
@@ -187,8 +189,14 @@ const RenderMenuItems = ({
 
           {/* Lists Mode */}
           {!(editingMode === item._id) && (
-            <div className="mb-8" onClick={() => handleEdit(item._id)}>
-              <h3 className="mb-1 font-bold text-xl text-orange-400">{item.name}</h3>
+            <div className="mb-8">
+              <div className='flex justify-between items-center mb-1 font-bold text-orange-400'>
+                <span className="text-xl">{item.name}</span>
+                <button className='btn btn-orange' onClick={() => handleEdit(item._id)}>
+                  <FontAwesomeIcon icon={faPen} className='mr-2'/>
+                  Edit
+                </button>
+              </div>
               <div className="text-white mb-1">{item.description}</div>
               <div className="text-white font-bold mb-3">{item.price}</div>
               

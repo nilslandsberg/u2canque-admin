@@ -77,7 +77,7 @@ const MenuItemForm = ({
                     handleInputChange(option, updatedOptions);
                   }}
                 >
-                  <FontAwesomeIcon icon={faTrashCan} style={{ color: "#eb4444" }} />
+                  <FontAwesomeIcon icon={faTrashCan} className="text-red-500 hover:text-red-700" />
                 </button>
               </div>
             </li>
@@ -102,7 +102,7 @@ const MenuItemForm = ({
           <div className="my-6">
             <div className="text-white">
               <span className="font-bold text-xl">Days Available: </span>
-              <span className='italic'>(select one or more day(s) to make item available for order)</span>
+              <span className='italic'>[select one or more day(s) to make item available for order]</span>
             </div>
             <div className="flex flex-wrap my-3">
               {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday', 'Every Day'].map((day) => (

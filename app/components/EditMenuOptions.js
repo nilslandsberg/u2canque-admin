@@ -101,7 +101,7 @@ const EditMenuOptions = () => {
         <div className="text-white">
           <h1 className='font-bold text-xl text-center'>Edit Menu Options</h1>
 
-          {/* Editing Tips Dropdown */}
+          {/* Editing Tips */}
           <div>
             <div className="text-l text-left my-2 cursor-pointer flex justify-center" onClick={() => setIsEditingTipsSectionOpen(!isEditingTipsSectionOpen)} >
               <span>Editing Tips</span>
@@ -109,9 +109,10 @@ const EditMenuOptions = () => {
             </div>
             {isEditingTipsSectionOpen && (
               <div className="text-center">
-                <h6>- Click on a section header to expand or hide those menu items.</h6>
-                <h6>- Click on a menu item to edit or delete that item, click save to update.</h6>
-                <h6>- Ensure any upcharge options include the price (example: Ranch +$0.50).</h6>
+                <h6>- Click on a section header to show or hide those menu items.</h6>
+                <h6>- Click the EDIT button to edit or delete an item, click save to update.</h6>
+                <h6>- Click the ADD NEW ITEM button create a new item in that section, click save.</h6>
+                <h6>- Ensure any new upcharge options include the price (examples: Ranch +$0.50 / Breast +$1.50).</h6>
               </div>
             )}
             <br />
