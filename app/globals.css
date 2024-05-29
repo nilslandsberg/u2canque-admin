@@ -75,3 +75,9 @@ textarea {
 .btn-green:hover {
   @apply bg-green-700;
 }
+.btn-yellow {
+  @apply bg-yellow-400 text-white;
+}
+.btn-yellow:hover {
+  @apply bg-yellow-600;
+}

@@ -22,9 +22,9 @@ const EditMenuOptions = () => {
   const [modifiers, setModifiers] = useState([]);
 
   // State variables for controlling section visibility
-  const [isEditingTipsSectionOpen, setIsEditingTipsSectionOpen] = useState(true);
+  const [isEditingTipsSectionOpen, setIsEditingTipsSectionOpen] = useState(false);
   const [isAppetizersSectionOpen, setIsAppetizersSectionOpen] = useState(false);
-  const [isLunchSectionOpen, setIsLunchSectionOpen] = useState(true);
+  const [isLunchSectionOpen, setIsLunchSectionOpen] = useState(false);
   const [isBulkBbqSectionOpen, setIsBulkBbqSectionOpen] = useState(false);
   const [isBulkSidesSectionOpen, setIsBulkSidesSectionOpen] = useState(false);
   const [isHolidaysSectionOpen, setIsHolidaysSectionOpen] = useState(false);
@@ -59,7 +59,7 @@ const EditMenuOptions = () => {
   };
 
   // handleCreateNewItem updates local state when new items are created on server to keep parent/child states in sync
-  // this is a great canidate for using Redux, but as we're so far along and almost finished this solution is fine for now :)
+  // this is a great canidate for using Redux, but as we're so far along and almost finished this solution is fine for now
   const handleCreateNewItem = (newItem, sectionName) => {
     switch (sectionName) {
       case 'appetizers':
@@ -133,7 +133,7 @@ const EditMenuOptions = () => {
                   deleteItem={deleteAppetizer}
                   handleRemoveItem={handleRemoveAppetizer}
                   handleCreateNewItem={handleCreateNewItem}
-                  sectionName="appetizers"
+                  sectionName="appetizer"
                   options={['sauce', 'dressing']}
                 />
               </>
@@ -224,7 +224,7 @@ const EditMenuOptions = () => {
                   deleteItem={deleteHoliday}
                   handleRemoveItem={handleRemoveHoliday}
                   handleCreateNewItem={handleCreateNewItem}
-                  sectionName="holiday-items"
+                  sectionName="holiday"
                 />
               </>
             )}
