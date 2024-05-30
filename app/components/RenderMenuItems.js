@@ -301,7 +301,7 @@ const RenderMenuItems = ({
       ))}
 
       {/* Add New Item Mode */}
-      {addingNewMode && (
+      {addingNewMode ? (
         <MenuItemForm
           editingMode={null}
           addingNewMode={true}
@@ -313,13 +313,12 @@ const RenderMenuItems = ({
           menuItemType={menuItemType}
           sectionName={sectionName}
         />
+      ) : (
+        // Add New Item Button
+        <button className="btn btn-blue mt-3" onClick={() => handleEdit(null)}>
+          Add New {capitalizeFirstLetter(sectionName)} Item
+        </button>
       )}
-
-      {/* Add New Item Button */}
-      <button className="btn btn-blue mt-3" onClick={() => handleEdit(null)}>
-        Add New {capitalizeFirstLetter(sectionName)} Item
-      </button>
-
     </div>
   );
 };

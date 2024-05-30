@@ -274,7 +274,7 @@ const MenuItemForm = ({
       {addingNewMode && (
         <>
           <button className="btn btn-green mt-3" onClick={handleSave}>
-            Add
+            Save
           </button>
           <button className="btn btn-yellow mt-3" onClick={handleCancel}>
             Cancel
