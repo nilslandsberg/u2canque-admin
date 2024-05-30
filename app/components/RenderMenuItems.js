@@ -186,14 +186,24 @@ const RenderMenuItems = ({
       return (
         <div className="text-white my-2 mb-3">
           <span className="font-bold">Price: </span>${item.price}
-        </div>);      
+        </div>
+      );
+    } else if (typeof item.price === 'number') {
+      const formattedValue = !isNaN(parseFloat(item.price)) ? `$${item.price.toFixed(2)}` : item.price;
+      return (
+        <div className="text-white my-2 mb-3">
+          <span className="font-bold">Price: </span>{formattedValue}
+        </div>
+      );
     } else if (typeof item.price === 'object' && item.price !== null) {
       return (
-        <h1>{formatBulkPrice(item.price)}</h1>);
+        <h1>{formatBulkPrice(item.price)}</h1>
+      );
     } else {
       return null;
     }
   };
+  
 
   const renderOptions = (item) => {
     return item.options &&
