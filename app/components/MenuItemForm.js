@@ -1,6 +1,36 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { capitalizeFirstLetter } from '../utils/stringManipulation';
 import { faTrashCan } from '@fortawesome/free-solid-svg-icons';
+
+const renderPriceInput = (menuItemType, editValues, handleInputChange) => {
+  if (menuItemType === 'bulk' || menuItemType === 'sides' || menuItemType === 'holiday') {
+    return (
+      <div className="text-white my-6 w-1/2">
+        <div className="font-bold text-xl mb-2">Price and Sizes:</div>
+        <div className="flex items-center mr-4">
+          <div>input for size (1lb)</div>
+          <div>input for servings (3-4 people)</div>
+          <div>input for pricing ($11.50)</div>
+        </div>
+      </div>
+    );
+  } else {
+    return (
+      <div className="my-5">
+        <div className="font-bold text-xl text-white">Price:</div>
+        <input
+          className="w-1/2"
+          type="text"
+          value={editValues.price}
+          onChange={(e) => handleInputChange('price', e.target.value)}
+          pattern="^\d+(\.\d{1,2})?$"
+          required
+        />
+      </div>
+    );
+  }
+};
 
 const MenuItemForm = ({
   editingMode,
@@ -17,13 +47,18 @@ const MenuItemForm = ({
 
   return (
     <div className="text-black mb-4">
-      <div className="font-bold text-xl text-white">Name:</div>
-      <input
-        type="text"
-        value={editValues.name}
-        onChange={(e) => handleInputChange('name', e.target.value)}
-        className="font-bold text-xl w-full"
-      />
+      {/* Name Editing */}
+      <div>
+        <div className="font-bold text-xl text-white">Name:</div>
+        <input
+          type="text"
+          value={editValues.name}
+          onChange={(e) => handleInputChange('name', e.target.value)}
+          className="font-bold text-xl w-full"
+        />
+      </div>
+
+      {/* Description Editing */}
       <div className="relative my-5">
         <span className="font-bold text-xl text-white absolute top-0">Description:</span>
         <textarea
@@ -32,17 +67,11 @@ const MenuItemForm = ({
           className="mt-6 w-full h-20"
         />
       </div>
-      <div className="my-5">
-        <div className="font-bold text-xl text-white">Price:</div>
-        <input
-          className="w-1/2"
-          type="text"
-          value={editValues.price}
-          onChange={(e) => handleInputChange('price', e.target.value)}
-          pattern="^\d+(\.\d{1,2})?$"
-          required
-        />
-      </div>
+      
+      {/* Price Editing */}
+      {renderPriceInput(menuItemType, editValues, handleInputChange)}
+
+      {/* Image Editing... currently only as URL, no file storage for custom upload as of now */}
       <div>
         <div className="font-bold text-xl text-white">Image URL:</div>
         <input
@@ -53,6 +82,7 @@ const MenuItemForm = ({
         />
       </div>
 
+      {/* Options Editing */}
       {options.map((option) => (
         <div className="my-5" key={option}>
           <h4 className="font-bold text-xl text-white">{option.charAt(0).toUpperCase() + option.slice(1)}:</h4>
@@ -89,7 +119,7 @@ const MenuItemForm = ({
               className="btn btn-orange"
               onClick={() => handleInputChange(option, [...editValues[option], ''])}
             >
-              Add New
+              Add New {capitalizeFirstLetter(option)}
             </button>
           </div>
         </div>
@@ -211,19 +241,33 @@ const MenuItemForm = ({
         </div>
       )}
 
-      {/* Bulk Editing */}
-      {menuItemType === 'bulk' && (
-        <div>...</div>
-      )}
-
-      {/* Sides Editing */}
-      {menuItemType === 'sides' && (
-        <div>...</div>
-      )}
-
       {/* Holiday Editing */}
       {menuItemType === 'holiday' && (
-        <div>...</div>
+        <div className="text-white my-6">
+          <div className="font-bold text-xl">Holiday(s) Available:</div>
+          <div className="flex items-center mr-4">
+            <div className="flex flex-wrap my-3">
+              {['Easter', 'Memorial Day', 'Independence Day', 'Thanksgiving', 'Christmas'].map((holiday) => (
+                <div key={holiday} className="flex items-center mr-4">
+                  <input
+                    type="checkbox"
+                    id={holiday}
+                    checked={(editValues.type || []).includes(holiday)}
+                    onChange={(e) => {
+                      const updatedTypes = e.target.checked
+                        ? [...(editValues.type || []), holiday]
+                        : (editValues.type || []).filter((t) => t !== holiday);
+                      handleInputChange('type', updatedTypes);
+                    }}
+                  />
+                  <label htmlFor={holiday} className="ml-2 text-white">
+                    {holiday}
+                  </label>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       )}
 
       {/* Buttons for Adding, Canceling, Saving, Deleting */}

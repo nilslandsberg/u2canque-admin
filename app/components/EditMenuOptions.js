@@ -9,7 +9,7 @@ import {
   getBulkBbq, createBulkBbq, updateBulkBbq, deleteBulkBbq,
   getBulkSides, createBulkSides, updateBulkSides, deleteBulkSides,
   getHolidays, createHoliday, updateHoliday, deleteHoliday,
-  getModifiers, updateModifiers
+  getModifiers, updateModifiers,
 } from '../utils/menuCRUD';
 
 const EditMenuOptions = () => {
@@ -110,8 +110,8 @@ const EditMenuOptions = () => {
             {isEditingTipsSectionOpen && (
               <div className="text-center">
                 <h6>- Click on a section header to show or hide those menu items.</h6>
-                <h6>- Click the EDIT button to edit or delete an item, click save to update.</h6>
-                <h6>- Click the ADD NEW ITEM button create a new item in that section, click save.</h6>
+                <h6>- Click the EDIT button to edit or delete an item, click SAVE to update.</h6>
+                <h6>- Click the ADD NEW ITEM button to create a new item in that section, click SAVE.</h6>
                 <h6>- Ensure any new upcharge options include the price (examples: Ranch +$0.50 / Breast +$1.50).</h6>
               </div>
             )}

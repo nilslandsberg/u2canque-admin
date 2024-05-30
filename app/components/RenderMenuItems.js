@@ -166,12 +166,106 @@ const RenderMenuItems = ({
     }
   };
 
+  const formatBulkPrice = (priceObj) => {
+    return Object.entries(priceObj).map(([key, value]) => {
+      const formattedKey = key.replace(/([A-Z])/g, ' $1').trim(); // Add space before uppercase letters
+      const formattedValue = !isNaN(parseFloat(value)) ? `$${parseFloat(value).toFixed(2)}` : value; // Format decimals
+      return (
+        <div key={key} className="text-white my-2">
+          <span className="font-bold text-l text-white my-2">
+            {formattedKey.charAt(0).toUpperCase() + formattedKey.slice(1)}: 
+          </span>
+          <span className="text-white indent-2 my-1"> {formattedValue}</span>
+        </div>
+      );
+    });
+  };
+  
+  const renderPrice = (item) => {
+    if (typeof item.price === 'string') {
+      return (
+        <div className="text-white my-2 mb-3">
+          <span className="font-bold">Price: </span>${item.price}
+        </div>);      
+    } else if (typeof item.price === 'object' && item.price !== null) {
+      return (
+        <h1>{formatBulkPrice(item.price)}</h1>);
+    } else {
+      return null;
+    }
+  };
+
+  const renderOptions = (item) => {
+    return item.options &&
+      Object.entries(item.options).map(
+        ([option, values]) =>
+          values.length > 0 && (
+            <div key={option} className="text-white my-2">
+              <h4 className="font-bold text-l text-white my-1">
+                {option.charAt(0).toUpperCase() + option.slice(1)}:
+              </h4>
+              <ul>
+                {values.map((value, index) => (
+                  <li key={index} className="text-white indent-2 my-1">
+                    {value}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )
+      );
+  };
+
+  const renderLunchProps = (item) => (
+    <div className="text-white my-2">
+      <h4 className="font-bold text-l text-white my-1">Days Available:</h4>
+      <ul>
+        {item.day.map((day, index) => (
+          <li key={index} className="text-white indent-2 my-1">
+            {day}
+          </li>
+        ))}
+      </ul>
+      <div className="text-white my-2">
+        <h4 className="font-bold text-l text-white my-1">Number of Sides:</h4>
+        {item.oneSide ? (
+          <div className="text-white indent-2 my-1">One Side</div>
+        ) : item.twoSides ? (
+          <div className="text-white indent-2 my-1">Two Sides</div>
+        ) : (
+          <div className="text-white indent-2 my-1">No Sides</div>
+        )}
+      </div>
+      <div className="text-white my-2">
+        <h4 className="font-bold text-l text-white my-1">Comes with Bread?</h4>
+        <div className="text-white indent-2 my-1">{item.bread ? 'Yes' : 'No'}</div>
+      </div>
+    </div>
+  );
+
+  const renderHolidayProps = (item) => (
+    <div className="text-white my-2">
+        <h4 className="font-bold text-l text-white">Holiday(s) Available:</h4>
+        {Array.isArray(item.type) ? (
+          <ul>
+            {item.type.map((type, index) => (
+              <li key={index} className="text-white my-1 indent-2">
+                {type}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <div className='indent-2'>{item.type}</div>
+        )}
+    </div>
+  );
+  
   return (
     <div>
       {/* Map over menu items and render list or edit view depending on editingMode / addingNewMode */}
       {itemList.map((item) => (
         <div key={item._id}>
-          {/* Editing Mode */}
+          {/* Edit Item Mode */}
           {(editingMode === item._id) && (
             <MenuItemForm
               editingMode={editingMode}
@@ -187,86 +281,26 @@ const RenderMenuItems = ({
             />
           )}
 
-          {/* Lists Mode */}
+          {/* View Item Mode */}
           {!(editingMode === item._id) && (
             <div className="mb-8">
               <div className='flex justify-between items-center mb-1 font-bold text-orange-400'>
                 <span className="text-xl">{item.name}</span>
                 <button className='btn btn-orange' onClick={() => handleEdit(item._id)}>
-                  <FontAwesomeIcon icon={faPen} className='mr-2'/>
-                  Edit
+                  <FontAwesomeIcon icon={faPen} className='mr-2'/> Edit
                 </button>
               </div>
               <div className="text-white mb-1">{item.description}</div>
-              <div className="text-white font-bold mb-3">{item.price}</div>
-              
-              {/* Options props */}
-              {item.options &&
-                Object.entries(item.options).map(
-                  ([option, values]) =>
-                    values.length > 0 && (
-                      <div key={option} className="text-white indent-2 my-1">
-                        <h4 className="font-bold text-l text-white">
-                          {option.charAt(0).toUpperCase() + option.slice(1)}:
-                        </h4>
-                        <ul>
-                          {values.map((value, index) => (
-                            <li key={index} className="text-white indent-4 my-1">
-                              {value}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-              ))}
-                
-              {/* Lunch props */}
-              {menuItemType === 'lunch' && (
-                <div className="text-white indent-2 my-2">
-                  <h4 className="font-bold text-l text-white">Days Available:</h4>
-                  <ul>
-                    {item.day.map((day, index) => (
-                      <li key={index} className="text-white indent-4 my-1">
-                        {day}
-                      </li>
-                    ))}
-                  </ul>
-                  <div className="text-white indent-2 my-2">
-                    <h4 className="font-bold text-l text-white my-1">Number of Sides:</h4>
-                    {item.oneSide ? (
-                      <div className="text-white indent-4 my-1">One Side</div>
-                    ) : item.twoSides ? (
-                      <div className="text-white indent-4 my-1">Two Sides</div>
-                    ) : (
-                      <div className="text-white indent-4 my-1">No Sides</div>
-                    )}
-                  </div>
-                  <div className="text-white indent-2 my-2">
-                    <h4 className="font-bold text-l text-white my-1">Comes with Bread?</h4>
-                    <div className="text-white indent-4 my-1">{item.bread ? 'Yes' : 'No'}</div>
-                  </div>
-                </div>
-              )}
-
-              {/* Bulk props */}
-              {menuItemType === 'bulk' && (
-                {/* ... */}
-              )}
-
-              {/* Sides props */}
-              {menuItemType === 'sides' && (
-              {/* ... */}
-              )}
-
-              {/* Holiday props */}
-              {menuItemType === 'holiday' && (
-                {/* ... */}
-              )}
+              <div className="text-white mb-1">{renderPrice(item)}</div>   
+              <div className="text-white mb-1">{renderOptions(item)}</div>   
+              <div className="text-white mb-1">{menuItemType === 'lunch' && renderLunchProps(item)}</div>   
+              <div className="text-white mb-1">{menuItemType === 'holiday' && renderHolidayProps(item)}</div>
             </div>
           )}
         </div>
       ))}
 
-      {/* Render Inputs to Add New Item */}
+      {/* Add New Item Mode */}
       {addingNewMode && (
         <MenuItemForm
           editingMode={null}
@@ -285,6 +319,7 @@ const RenderMenuItems = ({
       <button className="btn btn-blue mt-3" onClick={() => handleEdit(null)}>
         Add New {capitalizeFirstLetter(sectionName)} Item
       </button>
+
     </div>
   );
 };
