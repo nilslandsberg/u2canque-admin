@@ -2,11 +2,12 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { capitalizeFirstLetter } from '../utils/stringManipulation';
 import { faTrashCan } from '@fortawesome/free-solid-svg-icons';
-// const predefinedKeys = ['1lb', '3lbs', '4lbs', '5lbs', '6lbs', '7lbs', '8lbs', '9lbs', '10lbs', 'Pint', 'Quart', 'Half-Pan', 'Full-Pan'];
+
+// const smokedPrimeRibKeys = ['default', 'fourPounds', 'fivePounds', 'sixPounds', 'sevenPounds', 'eightPounds', 'ninePounds', 'tenPounds', 'pint', 'quart', 'halfPan', 'fullPan'];
 
 const renderPriceInput = (menuItemType, editValues, handleInputChange) => {
   if (menuItemType === 'bulk' || menuItemType === 'sides' || menuItemType === 'holiday') {
-    const predefinedKeys = ['1lb', '3lbs', 'Half-Pan', 'Full-Pan'];
+    const predefinedKeys = ['onePound', 'threePounds', 'fivePounds', 'pint', 'quart', 'halfPan', 'fullPan'];
 
     return (
       <div className="my-6 w-1/2">
@@ -21,7 +22,7 @@ const renderPriceInput = (menuItemType, editValues, handleInputChange) => {
                 type="text"
                 value={value.replace('$', '').trim()}
                 onChange={(e) => {
-                  const newValue = `$${e.target.value}`;
+                  const newValue = e.target.value;
                   handleInputChange('price', {
                     ...editValues.price,
                     [key]: newValue,
@@ -35,7 +36,7 @@ const renderPriceInput = (menuItemType, editValues, handleInputChange) => {
                     `${key}: ${newValue}`,
                   ]);
 
-                  if (key === '1lb') {
+                  if (key === 'onePound') {
                     handleInputChange('pricePerPound', e.target.value);
                   }
                 }}
@@ -192,7 +193,7 @@ const MenuItemForm = ({
           {/* Number of Sides */}
           <div className="my-6 w-1/2">
             <div className="font-bold text-xl text-white mb-2">Number of Sides:</div>
-            <div className="flex">
+            <div className="flex  ">
               <div className="flex items-center mr-4">
                 <input
                   type="radio"
