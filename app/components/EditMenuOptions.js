@@ -25,9 +25,9 @@ const EditMenuOptions = () => {
   const [isEditingTipsSectionOpen, setIsEditingTipsSectionOpen] = useState(false);
   const [isAppetizersSectionOpen, setIsAppetizersSectionOpen] = useState(false);
   const [isLunchSectionOpen, setIsLunchSectionOpen] = useState(false);
-  const [isBulkBbqSectionOpen, setIsBulkBbqSectionOpen] = useState(false);
+  const [isBulkBbqSectionOpen, setIsBulkBbqSectionOpen] = useState(true);
   const [isBulkSidesSectionOpen, setIsBulkSidesSectionOpen] = useState(false);
-  const [isHolidaysSectionOpen, setIsHolidaysSectionOpen] = useState(false);
+  const [isHolidaysSectionOpen, setIsHolidaysSectionOpen] = useState(true);
   const [isModifiersSectionOpen, setIsModifiersSectionOpen] = useState(false);
 
   useEffect(() => {
@@ -74,7 +74,7 @@ const EditMenuOptions = () => {
       case 'sides':
         setBulkSides([...bulkSides, newItem]);
         break;
-      case 'holiday-items':
+      case 'holiday':
         setHolidays([...holidays, newItem]);
         break;
       default:

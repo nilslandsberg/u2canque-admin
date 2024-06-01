@@ -63,6 +63,7 @@ const RenderMenuItems = ({
         image: '',
         description: '',
         price: '',
+        pricePerPound: '',
         ...options.reduce((acc, option) => ({ ...acc, [option]: [] }), {}),
       });
       setaddingNewMode(true);
@@ -75,8 +76,8 @@ const RenderMenuItems = ({
       const token = user.token;
   
       // Check if all required inputs are filled out
-      const requiredFields = ['name', 'image', 'description', 'price'];
-      const missingFields = requiredFields.filter(field => !editValues[field]);
+      const requiredFields = ['name', 'image', 'description'];
+      const missingFields = requiredFields.filter((field) => !editValues[field]);
   
       // Validate required fields
       if (missingFields.length > 0) {
@@ -92,17 +93,20 @@ const RenderMenuItems = ({
   
       // Validate price format
       const priceRegex = /^\d+(\.\d{1,2})?$/;
-      if (!priceRegex.test(editValues.price)) {
-        alert('Please enter Price as a number with two decimals.');
+      if (!priceRegex.test(editValues.price) && !editValues.price) {
+        alert('Please enter Price as a number with two decimals or specify sizes and prices.');
         return;
       }
-      const formattedPrice = parseFloat(editValues.price).toFixed(2);
+  
+      const formattedPrice = editValues.price ? parseFloat(editValues.price).toFixed(2) : undefined;
   
       const updatedItem = {
         name: editValues.name,
         image: editValues.image,
         description: editValues.description,
-        price: formattedPrice,
+        price: editValues.price,
+        size: editValues.size,
+        pricePerPound: editValues.pricePerPound,
         [sectionName]: true,
         ...(menuItemType === 'lunch' && {
           day: editValues.day,
@@ -110,6 +114,7 @@ const RenderMenuItems = ({
           twoSides: editValues.twoSides,
           bread: editValues.bread,
         }),
+        // type: editValues.type,
         ...(Object.keys(updatedOptions).length > 0 && { options: updatedOptions }),
       };
   
@@ -128,7 +133,9 @@ const RenderMenuItems = ({
           name: editValues.name,
           image: editValues.image,
           description: editValues.description,
-          price: formattedPrice,
+          price: editValues.price || existingItem.price,
+          size: editValues.size || existingItem.size,
+          pricePerPound: editValues.pricePerPound || existingItem.pricePerPound,
           [sectionName]: true,
           ...(menuItemType === 'lunch' && {
             day: editValues.day,
@@ -136,6 +143,7 @@ const RenderMenuItems = ({
             twoSides: editValues.twoSides,
             bread: editValues.bread,
           }),
+          // type: editValues.type,
           ...(Object.keys(updatedOptions).length > 0 && { options: updatedOptions }),
         };
         await updateItem(token, id, updatedItem);
@@ -202,8 +210,7 @@ const RenderMenuItems = ({
     } else {
       return null;
     }
-  };
-  
+  };  
 
   const renderOptions = (item) => {
     return item.options &&
@@ -291,7 +298,7 @@ const RenderMenuItems = ({
             />
           )}
 
-          {/* View Item Mode */}
+          {/* View List Mode */}
           {!(editingMode === item._id) && (
             <div className="mb-8">
               <div className='flex justify-between items-center mb-1 font-bold text-orange-400'>

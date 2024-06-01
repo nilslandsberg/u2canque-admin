@@ -187,7 +187,10 @@ export const createBulkBbq = async (token, bulkBbq) => {
       throw new Error('Failed to create bulk BBQ');
     }
 
-    return response.json();
+    const data = await response.json();
+    console.log('API Response for Sides:', data); // for testing issues with not recieving responses
+    return data;
+    
   } catch (error) {
     console.error('Error creating bulk BBQ:', error);
     throw error;
@@ -245,7 +248,7 @@ export const getBulkSides = async (token) => {
 
 export const createBulkSides = async (token, side) => {
   try {
-    console.log('createSide called with side:', side);
+    console.log('createBulkSides called with side:', side);
 
     const response = await fetch(`${apiUrl}/sides`, {
       method: 'POST',
@@ -261,8 +264,11 @@ export const createBulkSides = async (token, side) => {
       console.error('Failed to create side:', errorData);
       throw new Error('Failed to create side');
     }
-
-    return response.json();
+    
+    const data = await response.json();
+    console.log('API Response for Sides:', data); // for testing issues with not recieving responses
+    return data;
+    
   } catch (error) {
     console.error('Error creating side:', error);
     throw error;
@@ -337,7 +343,10 @@ export const createHoliday = async (token, holiday) => {
       throw new Error('Failed to create holiday');
     }
 
-    return response.json();
+    const data = await response.json();
+    console.log('API Response for Holiday:', data); // for testing issues with not recieving responses
+    return data;
+
   } catch (error) {
     console.error('Error creating holiday:', error);
     throw error;
