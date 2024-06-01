@@ -114,7 +114,7 @@ const RenderMenuItems = ({
           twoSides: editValues.twoSides,
           bread: editValues.bread,
         }),
-        // type: editValues.type,
+        type: editValues.type,
         ...(Object.keys(updatedOptions).length > 0 && { options: updatedOptions }),
       };
   
@@ -143,7 +143,7 @@ const RenderMenuItems = ({
             twoSides: editValues.twoSides,
             bread: editValues.bread,
           }),
-          // type: editValues.type,
+          type: editValues.type,
           ...(Object.keys(updatedOptions).length > 0 && { options: updatedOptions }),
         };
         await updateItem(token, id, updatedItem);
