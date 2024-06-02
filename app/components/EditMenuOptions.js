@@ -25,9 +25,9 @@ const EditMenuOptions = () => {
   const [isEditingTipsSectionOpen, setIsEditingTipsSectionOpen] = useState(false);
   const [isAppetizersSectionOpen, setIsAppetizersSectionOpen] = useState(false);
   const [isLunchSectionOpen, setIsLunchSectionOpen] = useState(false);
-  const [isBulkBbqSectionOpen, setIsBulkBbqSectionOpen] = useState(true);
+  const [isBulkBbqSectionOpen, setIsBulkBbqSectionOpen] = useState(false);
   const [isBulkSidesSectionOpen, setIsBulkSidesSectionOpen] = useState(false);
-  const [isHolidaysSectionOpen, setIsHolidaysSectionOpen] = useState(true);
+  const [isHolidaysSectionOpen, setIsHolidaysSectionOpen] = useState(false);
   const [isModifiersSectionOpen, setIsModifiersSectionOpen] = useState(false);
 
   useEffect(() => {

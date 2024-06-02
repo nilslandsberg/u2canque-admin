@@ -232,17 +232,23 @@ const RenderMenuItems = ({
           )
       );
   };
-
+  
   const renderLunchProps = (item) => (
     <div className="text-white my-2">
       <h4 className="font-bold text-l text-white my-1">Days Available:</h4>
-      <ul>
-        {item.day.map((day, index) => (
-          <li key={index} className="text-white indent-2 my-1">
-            {day}
-          </li>
-        ))}
-      </ul>
+      {Array.isArray(item.day) ? (
+        <ul>
+          {item.day.map((day, index) => (
+            <li key={index} className="text-white indent-2 my-1">
+              {day}
+            </li>
+          ))}
+        </ul>
+      ) : typeof item.day === 'string' ? (
+        <div className="text-white indent-2 my-1">{item.day}</div>
+      ) : (
+        <div className="text-white indent-2 my-1">No days available</div>
+      )}
       <div className="text-white my-2">
         <h4 className="font-bold text-l text-white my-1">Number of Sides:</h4>
         {item.oneSide ? (

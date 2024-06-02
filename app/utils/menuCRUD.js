@@ -95,7 +95,7 @@ export const getLunches = async (token) => {
 
 export const createLunch = async (token, lunch) => {
   try {
-    console.log('createLunch called with lunch:', lunch);
+    console.log('createLunch called with lunch:', lunch); // Check the data sent to the server
 
     const response = await fetch(`${apiUrl}/lunch`, {
       method: 'POST',
@@ -112,7 +112,10 @@ export const createLunch = async (token, lunch) => {
       throw new Error('Failed to create lunch');
     }
 
-    return response.json();
+    const data = await response.json();
+    console.log('API Response for Lunch:', data); // Verify the response data
+    return data;
+    
   } catch (error) {
     console.error('Error creating lunch:', error);
     throw error;
