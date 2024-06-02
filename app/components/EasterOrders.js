@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import RenderOrders from './RenderOrders';
 import { getEasterOrders } from '../utils/getEasterOrders';
+import { useRouter } from 'next/navigation';
 
 const EasterOrders = () => {
   const [orders, setOrders] = useState([]);
@@ -10,7 +11,7 @@ const EasterOrders = () => {
   const [date, setDate] = useState("");
 
   const currentYear = new Date().getFullYear();
-  
+  const router = useRouter();
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('user'));
@@ -30,7 +31,7 @@ const EasterOrders = () => {
         setIsLoading(false);
       } catch (error) {
         console.error('Error fetching orders: ', error);
-        setIsLoading(false);
+        router.push('/login');
       }
     };
     
@@ -39,7 +40,9 @@ const EasterOrders = () => {
   
   return (
     <>
-      {isLoading ? <div className="text-white text-center">Loading...</div> : 
+      {isLoading ? <div className="flex items-center justify-center h-screen">
+          <div className="w-16 h-16 border-t-4 border-b-4 border-white rounded-full animate-spin"></div>
+        </div> : 
         <>
           { orders.length === 0 ? (
             <div className="text-white text-center pt-4 text-2xl font-bold">There are no orders for Easter.</div>

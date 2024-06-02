@@ -2,17 +2,17 @@
 
 import React, { useEffect, useState } from 'react';
 import RenderOrders from './RenderOrders';
-import { getMemorialDayOrders } from '../utils/getMemorialDayOrders';
+import { getThanksgivingOrders } from '../utils/getThanksgivingOrders';
 import { useRouter } from 'next/navigation';
 
-const MemorialDayOrders = () => {
+const ThanksgivingOrders = () => {
   const [orders, setOrders] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [date, setDate] = useState("");
 
   const currentYear = new Date().getFullYear();
   const router = useRouter();
- 
+
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('user'));
     let token = ""
@@ -23,10 +23,10 @@ const MemorialDayOrders = () => {
     
     const fetchData = async () => {
       try {
-        const response = await getMemorialDayOrders(token);
-        setOrders(response.memorialDayOrders);
-        if (response.memorialDayOrders.length > 0) {
-          setDate(response.memorialDayOrders[0].pickUpDate); 
+        const response = await getThanksgivingOrders(token);
+        setOrders(response.thanksgivingOrders);
+        if (response.thanksgivingOrders.length > 0) {
+          setDate(response.thanksgivingOrders[0].pickUpDate); 
         }
         setIsLoading(false);
       } catch (error) {
@@ -45,10 +45,10 @@ const MemorialDayOrders = () => {
         </div> : 
         <>
           { orders.length === 0 ? (
-            <div className="text-white text-center pt-4 text-2xl font-bold">There are no orders for Memorial Day.</div>
+            <div className="text-white text-center pt-4 text-2xl font-bold">There are no orders for Thanksgiving.</div>
           ) : (
             <>
-              <div className="text-white z-35 font-bold text-center text-xl">Orders For Memorial Day {currentYear}</div>
+              <div className="text-white z-35 font-bold text-center text-xl">Orders For Thanksgiving {currentYear}</div>
               <div className="flex flex-nowrap lg:ml-40 md:ml-20 ml-10 ">
                 <RenderOrders orders={orders} />
               </div>
@@ -61,4 +61,4 @@ const MemorialDayOrders = () => {
   );
 }
 
-export default MemorialDayOrders;
+export default ThanksgivingOrders;

@@ -2,10 +2,10 @@
 
 import React, { useEffect, useState } from 'react';
 import RenderOrders from './RenderOrders';
-import { getMemorialDayOrders } from '../utils/getMemorialDayOrders';
+import { getIndependenceDayOrders } from '../utils/getIndependenceDayOrders';
 import { useRouter } from 'next/navigation';
 
-const MemorialDayOrders = () => {
+const IndependenceDayOrders = () => {
   const [orders, setOrders] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [date, setDate] = useState("");
@@ -23,10 +23,10 @@ const MemorialDayOrders = () => {
     
     const fetchData = async () => {
       try {
-        const response = await getMemorialDayOrders(token);
-        setOrders(response.memorialDayOrders);
-        if (response.memorialDayOrders.length > 0) {
-          setDate(response.memorialDayOrders[0].pickUpDate); 
+        const response = await getIndependenceDayOrders(token);
+        setOrders(response.independenceDayOrders);
+        if (response.independenceDayOrders.length > 0) {
+          setDate(response.independenceDayOrders[0].pickUpDate); 
         }
         setIsLoading(false);
       } catch (error) {
@@ -45,10 +45,10 @@ const MemorialDayOrders = () => {
         </div> : 
         <>
           { orders.length === 0 ? (
-            <div className="text-white text-center pt-4 text-2xl font-bold">There are no orders for Memorial Day.</div>
+            <div className="text-white text-center pt-4 text-2xl font-bold">There are no orders for Independence Day.</div>
           ) : (
             <>
-              <div className="text-white z-35 font-bold text-center text-xl">Orders For Memorial Day {currentYear}</div>
+              <div className="text-white z-35 font-bold text-center text-xl">Orders For Independence Day {currentYear}</div>
               <div className="flex flex-nowrap lg:ml-40 md:ml-20 ml-10 ">
                 <RenderOrders orders={orders} />
               </div>
@@ -61,4 +61,4 @@ const MemorialDayOrders = () => {
   );
 }
 
-export default MemorialDayOrders;
+export default IndependenceDayOrders;
