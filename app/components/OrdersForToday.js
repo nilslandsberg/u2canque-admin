@@ -42,7 +42,9 @@ const OrdersForToday = () => {
 
   return (
     <>
-      {isLoading ? <div className="text-white text-center">Loading...</div> : 
+      {isLoading ? <div className="flex items-center justify-center h-screen">
+          <div className="w-16 h-16 border-t-4 border-b-4 border-white rounded-full animate-spin"></div>
+        </div> : 
         <>
           { orders.length === 0 ? (
             <div className="text-white text-center pt-4 text-2xl font-bold">There are no orders for today.</div>
