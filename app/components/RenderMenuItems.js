@@ -50,6 +50,45 @@ const RenderMenuItems = ({
     }));
   };
 
+  const isValidPrice = (price) => {
+    // Check if the price is a string
+    if (typeof price === 'string') {
+      // Use a regular expression to validate the string format
+      const priceRegex = /^\d+(\.\d{1,2})?$/;
+      return priceRegex.test(price.trim());
+    }
+    // Check if the price is a number
+    else if (typeof price === 'number') {
+      return true;
+    }
+    // Check if the price is an object
+    else if (typeof price === 'object' && price !== null) {
+      // Iterate over the object values and validate each one
+      const validValues = Object.values(price).filter((value) => {
+        // If the value is a string
+        if (typeof value === 'string') {
+          // Trim the string and validate it using the regular expression
+          const priceRegex = /^\d+(\.\d{1,2})?$/;
+          return priceRegex.test(value.trim());
+        }
+        // If the value is a number, it's valid
+        else if (typeof value === 'number') {
+          return true;
+        }
+        // If the value is not a string or a number, it's invalid
+        else {
+          return false;
+        }
+      });
+      // If at least one value is valid, the price object is considered valid
+      return validValues.length > 0;
+    }
+    // If the price is not a string, number, or object, it's invalid
+    else {
+      return false;
+    }
+  };
+
   const handleEdit = (id) => {
     if (id) {
       setEditingMode(id);
@@ -92,9 +131,8 @@ const RenderMenuItems = ({
       }, {});
   
       // Validate price format
-      const priceRegex = /^\d+(\.\d{1,2})?$/;
-      if (!priceRegex.test(editValues.price) && !editValues.price) {
-        alert('Please enter Price as a number with two decimals or specify sizes and prices.');
+      if (!isValidPrice(editValues.price)) {
+        alert('Please enter Price as a number with two decimals.');
         return;
       }
   
@@ -232,7 +270,7 @@ const RenderMenuItems = ({
           )
       );
   };
-  
+
   const renderLunchProps = (item) => (
     <div className="text-white my-2">
       <h4 className="font-bold text-l text-white my-1">Days Available:</h4>
