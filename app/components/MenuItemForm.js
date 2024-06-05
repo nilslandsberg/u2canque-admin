@@ -81,6 +81,8 @@ const renderPriceInput = (menuItemType, editValues, handleInputChange) => {
           <div className="text-white font-bold text-xl mb-2">Price and Sizes:</div>
           {holidayPriceKeys.map((key) => {
             const value = editValues.price?.[key] || '';
+            console.log(editValues)
+            console.log(key)
             const formattedKey = key.replace(/([A-Z])/g, ' $1').trim(); // Add space before uppercase letters
   
             return (
@@ -88,7 +90,7 @@ const renderPriceInput = (menuItemType, editValues, handleInputChange) => {
                 <span className="text-white mr-2 font-bold w-32">{formattedKey.charAt(0).toUpperCase() + formattedKey.slice(1)}:</span>
                 <input
                   type="text"
-                  value={value.replace('$', '').trim()}
+                  value={typeof value === 'string' ? value.replace('$', '').trim() : ''}
                   onChange={(e) => {
                     const newValue = e.target.value;
                     handleInputChange('price', {
