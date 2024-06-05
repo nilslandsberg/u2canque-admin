@@ -130,20 +130,46 @@ const RenderMenuItems = ({
         return acc;
       }, {});
   
-      // Validate price format
-      if (!isValidPrice(editValues.price)) {
-        alert('Please enter Price as a number with two decimals.');
-        return;
+      // Define the price keys for each menu item type
+      const priceKeysMap = {
+        bulk: ['onePound', 'threePounds', 'fivePounds', 'halfPan', 'fullPan'],
+        sides: ['pint', 'quart', 'halfPan', 'fullPan'],
+        holiday: ['default', 'fourPounds', 'fivePounds', 'sixPounds', 'sevenPounds', 'eightPounds', 'ninePounds', 'tenPounds', 'halfPan', 'fullPan']
+      };
+  
+      // Define the required price keys for validation
+      const requiredPriceFields = {
+        bulk: 'onePound',
+        holiday: 'default'
+      };
+  
+      // Get the price keys and required field for the current menu item type
+      const priceKeys = priceKeysMap[menuItemType] || [];
+      const requiredPriceField = requiredPriceFields[menuItemType];
+  
+      // Validate the price fields
+      for (let key of priceKeys) {
+        const value = editValues.price?.[key];
+        if (key === requiredPriceField && (!value || isNaN(parseFloat(value)))) {
+          alert(`Please enter a valid numeric value for ${key}.`);
+          return;
+        } else if (value && isNaN(parseFloat(value))) {
+          alert(`Please enter a valid numeric value for ${key}.`);
+          return;
+        }
       }
   
+      // Format price
       const formattedPrice = editValues.price ? parseFloat(editValues.price).toFixed(2) : undefined;
+  
+      const formattedSize = formatSizeArray(menuItemType, editValues);
   
       const updatedItem = {
         name: editValues.name,
         image: editValues.image,
         description: editValues.description,
         price: editValues.price,
-        size: editValues.size,
+        size: formattedSize,
         pricePerPound: editValues.pricePerPound,
         [sectionName]: true,
         ...(menuItemType === 'lunch' && {
@@ -172,7 +198,7 @@ const RenderMenuItems = ({
           image: editValues.image,
           description: editValues.description,
           price: editValues.price || existingItem.price,
-          size: editValues.size || existingItem.size,
+          size: formattedSize || existingItem.size,
           pricePerPound: editValues.pricePerPound || existingItem.pricePerPound,
           [sectionName]: true,
           ...(menuItemType === 'lunch' && {
@@ -192,6 +218,7 @@ const RenderMenuItems = ({
       console.error('Error updating item:', error);
     }
   };
+  
 
   const handleCancel = () => {
     setaddingNewMode(false);
@@ -225,6 +252,52 @@ const RenderMenuItems = ({
         </div>
       );
     });
+  };
+
+  const formatSizeArray = (menuItemType, editValues) => {
+    if (menuItemType === 'bulk' || menuItemType === 'sides') {
+      const bulkPriceKeys = ['onePound', 'threePounds', 'fivePounds', 'pint', 'quart', 'halfPan', 'fullPan'];
+      const servingsMap = {
+        onePound: '1lb (serves 3-4)',
+        threePounds: '3lbs (serves 9-12)',
+        fivePounds: '5lbs (serves 15-20)',
+        pint: 'Pint (serves 2-3)',
+        quart: 'Quart (serves 4-6)',
+        halfPan: 'Half-Pan (Serves 12-14)',
+        fullPan: 'Full-Pan (Serves 24-28)',
+      };
+  
+      return bulkPriceKeys
+        .filter((key) => editValues.price?.[key])
+        .map((key) => {
+          const price = parseFloat(editValues.price[key]).toFixed(2);
+          return `${servingsMap[key]}: $${price}`;
+        });
+    } else if (menuItemType === 'holiday') {
+      const holidayPriceKeys = ['default', 'fourPounds', 'fivePounds', 'sixPounds', 'sevenPounds', 'eightPounds', 'ninePounds', 'tenPounds', 'pint', 'quart', 'halfPan', 'fullPan'];
+      const holidayServingsMap = {
+        fourPounds: '4lbs',
+        fivePounds: '5lbs',
+        sixPounds: '6lbs',
+        sevenPounds: '7lbs',
+        eightPounds: '8lbs',
+        ninePounds: '9lbs',
+        tenPounds: '10lbs',
+        pint: 'Pint (serves 2-3)',
+        quart: 'Quart (serves 4-6)',
+        halfPan: 'Half-Pan (Serves 12-14)',
+        fullPan: 'Full-Pan (Serves 24-28)',
+      };
+  
+      return holidayPriceKeys
+        .filter((key) => editValues.price?.[key])
+        .map((key) => {
+          const price = parseFloat(editValues.price[key]).toFixed(2);
+          return `${holidayServingsMap[key]}: $${price}`;
+        });
+    }
+  
+    return [];
   };
   
   const renderPrice = (item) => {

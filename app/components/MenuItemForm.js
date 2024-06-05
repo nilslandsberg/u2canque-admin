@@ -4,18 +4,20 @@ import { capitalizeFirstLetter } from '../utils/stringManipulation';
 import { faTrashCan } from '@fortawesome/free-solid-svg-icons';
 
 const renderPriceInput = (menuItemType, editValues, handleInputChange) => {
-  if (menuItemType === 'bulk' || menuItemType === 'sides') {
-    const bulkPriceKeys = ['onePound', 'threePounds', 'fivePounds', 'pint', 'quart', 'halfPan', 'fullPan'];
-
+  if (menuItemType === 'bulk') {
+    const bulkPriceKeys = ['onePound', 'threePounds', 'fivePounds', 'halfPan', 'fullPan'];
+    
     return (
       <div className="my-6 w-1/2">
         <div className="text-white font-bold text-xl mb-2">Price and Sizes:</div>
         {bulkPriceKeys.map((key) => {
           const value = editValues.price?.[key] || '';
+          const formattedKey = key.replace(/([A-Z])/g, ' $1').trim(); // Add space before uppercase letters
 
           return (
             <div key={key} className="flex items-center mb-2">
-              <span className="text-white mr-2 font-bold w-32">{key}:</span>
+              {/* <span className="text-white mr-2 font-bold w-32">{key}:</span> */}
+              <span className="text-white mr-2 font-bold w-32">{formattedKey.charAt(0).toUpperCase() + formattedKey.slice(1)}:</span>
               <input
                 type="text"
                 value={value.replace('$', '').trim()}
@@ -26,19 +28,10 @@ const renderPriceInput = (menuItemType, editValues, handleInputChange) => {
                     [key]: newValue,
                   });
 
-                  // Ensure editValues.size is an array
-                  const updatedSize = Array.isArray(editValues.size) ? editValues.size : [];
-
-                  handleInputChange('size', [
-                    ...updatedSize.filter((item) => !item.startsWith(key)),
-                    `${key}: ${newValue}`,
-                  ]);
-
                   if (key === 'onePound') {
                     handleInputChange('pricePerPound', e.target.value);
                   }
                 }}
-                placeholder="11.50, 34.50, etc."
                 pattern="^\d+(\.\d{1,2})?$"
                 className="text-black border border-gray-300 rounded px-2 py-1 mr-2 flex-grow"
               />
@@ -47,6 +40,40 @@ const renderPriceInput = (menuItemType, editValues, handleInputChange) => {
         })}
       </div>
     );
+  
+  } else if (menuItemType === 'sides') {
+      const bulkPriceKeys = ['pint', 'quart', 'halfPan', 'fullPan'];
+  
+      return (
+        <div className="my-6 w-1/2">
+          <div className="text-white font-bold text-xl mb-2">Price and Sizes:</div>
+          {bulkPriceKeys.map((key) => {
+            const value = editValues.price?.[key] || '';
+            const formattedKey = key.replace(/([A-Z])/g, ' $1').trim(); // Add space before uppercase letters
+  
+            return (
+              <div key={key} className="flex items-center mb-2">
+              <span className="text-white mr-2 font-bold w-32">{formattedKey.charAt(0).toUpperCase() + formattedKey.slice(1)}:</span>
+                <input
+                  type="text"
+                  value={value.replace('$', '').trim()}
+                  onChange={(e) => {
+                    const newValue = e.target.value;
+                    handleInputChange('price', {
+                      ...editValues.price,
+                      [key]: newValue,
+                    });
+
+                  }}
+                  pattern="^\d+(\.\d{1,2})?$"
+                  className="text-black border border-gray-300 rounded px-2 py-1 mr-2 flex-grow"
+                />
+              </div>
+            );
+          })}
+        </div>
+      );
+  
   } else if (menuItemType === 'holiday') {
       const holidayPriceKeys = ['default', 'fourPounds', 'fivePounds', 'sixPounds', 'sevenPounds', 'eightPounds', 'ninePounds', 'tenPounds', 'halfPan', 'fullPan'];
       return (
@@ -54,10 +81,11 @@ const renderPriceInput = (menuItemType, editValues, handleInputChange) => {
           <div className="text-white font-bold text-xl mb-2">Price and Sizes:</div>
           {holidayPriceKeys.map((key) => {
             const value = editValues.price?.[key] || '';
+            const formattedKey = key.replace(/([A-Z])/g, ' $1').trim(); // Add space before uppercase letters
   
             return (
               <div key={key} className="flex items-center mb-2">
-                <span className="text-white mr-2 font-bold w-32">{key}:</span>
+                <span className="text-white mr-2 font-bold w-32">{formattedKey.charAt(0).toUpperCase() + formattedKey.slice(1)}:</span>
                 <input
                   type="text"
                   value={value.replace('$', '').trim()}
@@ -68,19 +96,10 @@ const renderPriceInput = (menuItemType, editValues, handleInputChange) => {
                       [key]: newValue,
                     });
   
-                    // Ensure editValues.size is an array
-                    const updatedSize = Array.isArray(editValues.size) ? editValues.size : [];
-  
-                    handleInputChange('size', [
-                      ...updatedSize.filter((item) => !item.startsWith(key)),
-                      `${key}: ${newValue}`,
-                    ]);
-  
                     if (key === 'default') {
                       handleInputChange('pricePerPound', e.target.value);
                     }
                   }}
-                  placeholder="11.50, 34.50, etc."
                   pattern="^\d+(\.\d{1,2})?$"
                   className="text-black border border-gray-300 rounded px-2 py-1 mr-2 flex-grow"
                 />
