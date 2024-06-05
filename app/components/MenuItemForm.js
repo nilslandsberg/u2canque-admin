@@ -172,6 +172,7 @@ const MenuItemForm = ({
           value={editValues.image}
           onChange={(e) => handleInputChange('image', e.target.value)}
           className="text-l w-1/2"
+          placeholder='http:// or https://'
         />
       </div>
 
