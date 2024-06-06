@@ -218,7 +218,6 @@ const RenderMenuItems = ({
       console.error('Error updating item:', error);
     }
   };
-  
 
   const handleCancel = () => {
     setaddingNewMode(false);
@@ -293,7 +292,7 @@ const RenderMenuItems = ({
         .filter((key) => editValues.price?.[key])
         .map((key) => {
           const price = parseFloat(editValues.price[key]).toFixed(2);
-          return `${holidayServingsMap[key]}: $${price}`;
+          return `${holidayServingsMap[key]} : $${price}`;
         });
     }
   
