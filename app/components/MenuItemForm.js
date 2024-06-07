@@ -361,6 +361,37 @@ const MenuItemForm = ({
               ))}
             </div>
           </div>
+
+          {/* New section for "Is a Side" */}
+          <div className="my-6 w-1/2">
+            <div className="font-bold text-xl text-white mb-2">Is a Side?</div>
+            <div className="flex">
+              <div className="flex items-center mr-4">
+                <input
+                  type="radio"
+                  id="notSide"
+                  checked={!editValues.side}
+                  onChange={() => handleInputChange('side', false)}
+                  className="mr-2"
+                />
+                <label htmlFor="notSide" className="text-white">
+                  No
+                </label>
+              </div>
+              <div className="flex items-center">
+                <input
+                  type="radio"
+                  id="yesSide"
+                  checked={editValues.side}
+                  onChange={() => handleInputChange('side', true)}
+                  className="mr-2"
+                />
+                <label htmlFor="yesSide" className="text-white">
+                  Yes
+                </label>
+              </div>
+            </div>
+          </div>
         </div>
       )}
 

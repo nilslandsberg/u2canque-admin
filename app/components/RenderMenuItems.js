@@ -193,6 +193,7 @@ const RenderMenuItems = ({
           bread: editValues.bread,
         }),
         type: editValues.type,
+        side: editValues.side || false,
         ...(Object.keys(updatedOptions).length > 0 && { options: updatedOptions }),
       };
   
@@ -222,6 +223,7 @@ const RenderMenuItems = ({
             bread: editValues.bread,
           }),
           type: editValues.type,
+          side: editValues.side || false,
           ...(Object.keys(updatedOptions).length > 0 && { options: updatedOptions }),
         };
         await updateItem(token, id, updatedItem);
@@ -404,6 +406,10 @@ const RenderMenuItems = ({
         ) : (
           <div className='indent-2'>{item.type}</div>
         )}
+      <div className="text-white my-2">
+        <h4 className="font-bold text-l text-white my-1">Is a Side?</h4>
+        <div className="text-white indent-2 my-1">{item.side ? 'Yes' : 'No'}</div>
+      </div>
     </div>
   );
   
