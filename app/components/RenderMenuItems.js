@@ -146,22 +146,36 @@ const RenderMenuItems = ({
       // Get the price keys and required field for the current menu item type
       const priceKeys = priceKeysMap[menuItemType] || [];
       const requiredPriceField = requiredPriceFields[menuItemType];
-  
+
+      // Regular expression to validate price format (e.g., 9.00, 10.50, 100.00)
+      const priceRegex = /^\d+\.\d{2}$/;
+      
       // Validate the price fields
-      for (let key of priceKeys) {
-        const value = editValues.price?.[key];
-        if (key === requiredPriceField && (!value || isNaN(parseFloat(value)))) {
-          alert(`Please enter a valid numeric value for ${key}.`);
-          return;
-        } else if (value && isNaN(parseFloat(value))) {
-          alert(`Please enter a valid numeric value for ${key}.`);
+      if (typeof editValues.price === 'object') {
+        // For bulk, sides, and holiday items
+        for (let key of priceKeys) {
+          const value = editValues.price?.[key];
+          
+          if (key === requiredPriceField) {
+            if (!value || !priceRegex.test(value)) {
+              alert(`Please enter a valid price with two decimal places for ${key} (e.g., 9.00, 10.50).`);
+              return;
+            }
+          } else if (value) {
+            if (!priceRegex.test(value)) {
+              alert(`Please enter a valid price with two decimal places for ${key} (e.g., 9.00, 10.50).`);
+              return;
+            }
+          }
+        }
+      } else {
+        // For items with price as a string (e.g., lunch items)
+        if (!editValues.price || !priceRegex.test(editValues.price)) {
+          alert('Please enter a valid price with two decimal places (e.g., 9.00, 10.50).');
           return;
         }
       }
-  
-      // Format price
-      const formattedPrice = editValues.price ? parseFloat(editValues.price).toFixed(2) : undefined;
-  
+
       const formattedSize = formatSizeArray(menuItemType, editValues);
   
       const updatedItem = {
