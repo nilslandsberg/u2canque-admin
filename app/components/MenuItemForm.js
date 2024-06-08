@@ -80,7 +80,9 @@ const renderPriceInput = (menuItemType, editValues, handleInputChange) => {
     return (
       <div className="my-6 w-1/2">
         <div className="text-white font-bold text-xl mb-2">Price and Sizes:</div>
-          <i className='text-red-500  my-5'>choose one: either Single Price for an item with only one price, or alternatively fill out price by Pound/Pan for bulk and side items</i>
+          <i className='text-red-500  my-5'>main items: EITHER enter single price OR enter prices by pounds</i>
+          <br />
+          <i className='text-red-500  my-5'>side items: ONLY fill out price by pan (and click yes on "Is a Side?")</i>
         <div className="flex my-5 items-center">
           <span className="text-white mr-2 font-bold w-32 ">Single Price:</span>
           <input
@@ -92,6 +94,7 @@ const renderPriceInput = (menuItemType, editValues, handleInputChange) => {
             required
           />
         </div>
+        <hr />
         {holidayPriceKeys.map((key) => {
           const value = editValues.price?.[key] || '';
           const formattedKey = key.replace(/([A-Z])/g, ' $1').trim(); // Add space before uppercase letters
