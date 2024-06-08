@@ -134,13 +134,13 @@ const RenderMenuItems = ({
       const priceKeysMap = {
         bulk: ['onePound', 'threePounds', 'fivePounds', 'halfPan', 'fullPan'],
         sides: ['pint', 'quart', 'halfPan', 'fullPan'],
-        holiday: ['default', 'fourPounds', 'fivePounds', 'sixPounds', 'sevenPounds', 'eightPounds', 'ninePounds', 'tenPounds', 'halfPan', 'fullPan']
+        holiday: ['onePound', 'fourPounds', 'fivePounds', 'sixPounds', 'sevenPounds', 'eightPounds', 'ninePounds', 'tenPounds', 'halfPan', 'fullPan']
       };
   
       // Define the required price keys for validation
       const requiredPriceFields = {
         bulk: 'onePound',
-        holiday: 'default'
+        // holiday: 'onePound'
       };
   
       // Get the price keys and required field for the current menu item type
@@ -289,8 +289,9 @@ const RenderMenuItems = ({
           return `${servingsMap[key]}: $${price}`;
         });
     } else if (menuItemType === 'holiday') {
-      const holidayPriceKeys = ['default', 'fourPounds', 'fivePounds', 'sixPounds', 'sevenPounds', 'eightPounds', 'ninePounds', 'tenPounds', 'pint', 'quart', 'halfPan', 'fullPan'];
+      const holidayPriceKeys = ['onePound', 'fourPounds', 'fivePounds', 'sixPounds', 'sevenPounds', 'eightPounds', 'ninePounds', 'tenPounds', 'pint', 'quart', 'halfPan', 'fullPan'];
       const holidayServingsMap = {
+        onePound: '1lb',
         fourPounds: '4lbs',
         fivePounds: '5lbs',
         sixPounds: '6lbs',

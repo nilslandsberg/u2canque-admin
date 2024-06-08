@@ -75,39 +75,52 @@ const renderPriceInput = (menuItemType, editValues, handleInputChange) => {
       );
   
   } else if (menuItemType === 'holiday') {
-      const holidayPriceKeys = ['default', 'fourPounds', 'fivePounds', 'sixPounds', 'sevenPounds', 'eightPounds', 'ninePounds', 'tenPounds', 'halfPan', 'fullPan'];
-      return (
-        <div className="my-6 w-1/2">
-          <div className="text-white font-bold text-xl mb-2">Price and Sizes:</div>
-          {holidayPriceKeys.map((key) => {
-            const value = editValues.price?.[key] || '';
-            const formattedKey = key.replace(/([A-Z])/g, ' $1').trim(); // Add space before uppercase letters
-  
-            return (
-              <div key={key} className="flex items-center mb-2">
-                <span className="text-white mr-2 font-bold w-32">{formattedKey.charAt(0).toUpperCase() + formattedKey.slice(1)}:</span>
-                <input
-                  type="text"
-                  value={value.replace('$', '').trim()}
-                  onChange={(e) => {
-                    const newValue = e.target.value;
-                    handleInputChange('price', {
-                      ...editValues.price,
-                      [key]: newValue,
-                    });
-  
-                    if (key === 'default') {
-                      handleInputChange('pricePerPound', e.target.value);
-                    }
-                  }}
-                  pattern="^\d+(\.\d{1,2})?$"
-                  className="text-black border border-gray-300 rounded px-2 py-1 mr-2 flex-grow"
-                />
-              </div>
-            );
-          })}
+    const holidayPriceKeys = ['fourPounds', 'fivePounds', 'sixPounds', 'sevenPounds', 'eightPounds', 'ninePounds', 'tenPounds', 'halfPan', 'fullPan'];
+
+    return (
+      <div className="my-6 w-1/2">
+        <div className="text-white font-bold text-xl mb-2">Price and Sizes:</div>
+          <i className='text-red-500  my-5'>choose one: either Single Price for an item with only one price, or alternatively fill out price by Pound/Pan for bulk and side items</i>
+        <div className="flex my-5 items-center">
+          <span className="text-white mr-2 font-bold w-32 ">Single Price:</span>
+          <input
+            className="text-black border border-gray-300 rounded px-2 py-1 mr-2 flex-grow"
+            type="text"
+            value={editValues.price || ''}
+            onChange={(e) => handleInputChange('price', e.target.value)}
+            pattern="^\d+(\.\d{1,2})?$"
+            required
+          />
         </div>
-      );
+        {holidayPriceKeys.map((key) => {
+          const value = editValues.price?.[key] || '';
+          const formattedKey = key.replace(/([A-Z])/g, ' $1').trim(); // Add space before uppercase letters
+
+          return (
+            <div key={key} className="flex items-center mb-3 mt-3">
+              <span className="text-white mr-2 font-bold w-32">{formattedKey.charAt(0).toUpperCase() + formattedKey.slice(1)}:</span>
+              <input
+                type="text"
+                value={value.replace('$', '').trim()}
+                onChange={(e) => {
+                  const newValue = e.target.value;
+                  handleInputChange('price', {
+                    ...(typeof editValues.price === 'string' ? {} : editValues.price),
+                    [key]: newValue,
+                  });
+
+                  if (key === 'fourPounds') {
+                    handleInputChange('pricePerPound', (e.target.value / 4));
+                  }
+                }}
+                pattern="^\d+(\.\d{1,2})?$"
+                className="text-black border border-gray-300 rounded px-2 py-1 mr-2 flex-grow"
+              />
+            </div>
+          );
+        })}
+      </div>
+    );
   } else {
     return (
       <div className="my-5">
@@ -124,6 +137,7 @@ const renderPriceInput = (menuItemType, editValues, handleInputChange) => {
     );
   }
 };
+  
 
 const MenuItemForm = ({
   editingMode,
