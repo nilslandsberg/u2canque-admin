@@ -4,19 +4,24 @@ import { capitalizeFirstLetter } from '../utils/stringManipulation';
 import { faTrashCan } from '@fortawesome/free-solid-svg-icons';
 
 const renderPriceInput = (menuItemType, editValues, handleInputChange) => {
-  if (menuItemType === 'bulk') {
-    const bulkPriceKeys = ['onePound', 'threePounds', 'fivePounds', 'halfPan', 'fullPan'];
-    
-    return (
-      <div className="my-6 w-1/2">
-        <div className="text-white font-bold text-xl mb-2">Price and Sizes:</div>
-        {bulkPriceKeys.map((key) => {
-          const value = editValues.price?.[key] || '';
-          const formattedKey = key.replace(/([A-Z])/g, ' $1').trim(); // Add space before uppercase letters
+  const handleBlur = (key, value) => {
+    let formattedValue = parseFloat(value).toFixed(2);
+    handleInputChange('price', {
+      ...editValues.price,
+      [key]: formattedValue,
+    });
+  };
 
-          return (
-            <div key={key} className="flex items-center mb-2">
-              {/* <span className="text-white mr-2 font-bold w-32">{key}:</span> */}
+  const renderInputs = (priceKeys) => (
+    <div className="my-6 w-1/2">
+      <div className="text-white font-bold text-xl mb-2">Price and Sizes:</div>
+      {priceKeys.map((key) => {
+        const value = editValues.price?.[key] || '';
+        const formattedKey = key.replace(/([A-Z])/g, ' $1').trim(); // Add space before uppercase letters
+
+        return (
+          <React.Fragment key={key}>
+            <div className="flex items-center mb-2">
               <span className="text-white mr-2 font-bold w-32">{formattedKey.charAt(0).toUpperCase() + formattedKey.slice(1)}:</span>
               <input
                 type="text"
@@ -32,57 +37,32 @@ const renderPriceInput = (menuItemType, editValues, handleInputChange) => {
                     handleInputChange('pricePerPound', e.target.value);
                   }
                 }}
+                onBlur={(e) => handleBlur(key, e.target.value)}
                 pattern="^\d+(\.\d{1,2})?$"
                 className="text-black border border-gray-300 rounded px-2 py-1 mr-2 flex-grow"
               />
             </div>
-          );
-        })}
-      </div>
-    );
-  
-  } else if (menuItemType === 'sides') {
-      const bulkPriceKeys = ['pint', 'quart', 'halfPan', 'fullPan'];
-  
-      return (
-        <div className="my-6 w-1/2">
-          <div className="text-white font-bold text-xl mb-2">Price and Sizes:</div>
-          {bulkPriceKeys.map((key) => {
-            const value = editValues.price?.[key] || '';
-            const formattedKey = key.replace(/([A-Z])/g, ' $1').trim(); // Add space before uppercase letters
-  
-            return (
-              <div key={key} className="flex items-center mb-2">
-              <span className="text-white mr-2 font-bold w-32">{formattedKey.charAt(0).toUpperCase() + formattedKey.slice(1)}:</span>
-                <input
-                  type="text"
-                  value={value.replace('$', '').trim()}
-                  onChange={(e) => {
-                    const newValue = e.target.value;
-                    handleInputChange('price', {
-                      ...editValues.price,
-                      [key]: newValue,
-                    });
+            {key === 'fivePounds' && <hr />}
+          </React.Fragment>
+        );
+      })}
+    </div>
+  );
 
-                  }}
-                  pattern="^\d+(\.\d{1,2})?$"
-                  className="text-black border border-gray-300 rounded px-2 py-1 mr-2 flex-grow"
-                />
-              </div>
-            );
-          })}
-        </div>
-      );
-  
+  if (menuItemType === 'bulk') {
+    const bulkPriceKeys = ['onePound', 'threePounds', 'fivePounds', 'halfPan', 'fullPan'];
+    return renderInputs(bulkPriceKeys);
+  } else if (menuItemType === 'sides') {
+    const sidesPriceKeys = ['pint', 'quart', 'halfPan', 'fullPan'];
+    return renderInputs(sidesPriceKeys);
   } else if (menuItemType === 'holiday') {
     const holidayPriceKeys = ['fourPounds', 'fivePounds', 'sixPounds', 'sevenPounds', 'eightPounds', 'ninePounds', 'tenPounds', 'halfPan', 'fullPan'];
-
     return (
       <div className="my-6 w-1/2">
         <div className="text-white font-bold text-xl mb-2">Price and Sizes:</div>
-          <i className='text-red-500  my-5'>main items: EITHER enter single price OR enter prices by pounds</i>
-          <br />
-          <i className='text-red-500  my-5'>side items: ONLY fill out price by pan (and click yes on "Is a Side?")</i>
+        <i className='text-red-500 my-5'>main items: EITHER enter single price OR enter prices by pounds</i>
+        <br />
+        <i className='text-red-500 my-5'>side items: ONLY fill out price by pan (and click yes on "Is a Side?")</i>
         <div className="flex my-5 items-center">
           <span className="text-white mr-2 font-bold w-32 ">Single Price:</span>
           <input
@@ -90,6 +70,7 @@ const renderPriceInput = (menuItemType, editValues, handleInputChange) => {
             type="text"
             value={editValues.price || ''}
             onChange={(e) => handleInputChange('price', e.target.value)}
+            onBlur={(e) => handleBlur('price', e.target.value)}
             pattern="^\d+(\.\d{1,2})?$"
             required
           />
@@ -100,26 +81,31 @@ const renderPriceInput = (menuItemType, editValues, handleInputChange) => {
           const formattedKey = key.replace(/([A-Z])/g, ' $1').trim(); // Add space before uppercase letters
 
           return (
-            <div key={key} className="flex items-center mb-3 mt-3">
-              <span className="text-white mr-2 font-bold w-32">{formattedKey.charAt(0).toUpperCase() + formattedKey.slice(1)}:</span>
-              <input
-                type="text"
-                value={value.replace('$', '').trim()}
-                onChange={(e) => {
-                  const newValue = e.target.value;
-                  handleInputChange('price', {
-                    ...(typeof editValues.price === 'string' ? {} : editValues.price),
-                    [key]: newValue,
-                  });
+            <React.Fragment key={key}>
+              {key === 'halfPan' && <hr />}
+              <div className="flex items-center mb-3 mt-3">
+                <span className="text-white mr-2 font-bold w-32">{formattedKey.charAt(0).toUpperCase() + formattedKey.slice(1)}:</span>
+                <input
+                  type="text"
+                  value={value.replace('$', '').trim()}
+                  onChange={(e) => {
+                    const newValue = e.target.value;
+                    handleInputChange('price', {
+                      ...(typeof editValues.price === 'string' ? {} : editValues.price),
+                      [key]: newValue,
+                    });
 
-                  if (key === 'fourPounds') {
-                    handleInputChange('pricePerPound', (e.target.value / 4));
-                  }
-                }}
-                pattern="^\d+(\.\d{1,2})?$"
-                className="text-black border border-gray-300 rounded px-2 py-1 mr-2 flex-grow"
-              />
-            </div>
+                    if (key === 'fourPounds') {
+                      handleInputChange('pricePerPound', (e.target.value / 4));
+                    }
+                  }}
+                  onBlur={(e) => handleBlur(key, e.target.value)}
+                  pattern="^\d+(\.\d{1,2})?$"
+                  className="text-black border border-gray-300 rounded px-2 py-1 mr-2 flex-grow"
+                />
+              </div>
+              {key === 'tenPounds' && <hr />}
+            </React.Fragment>
           );
         })}
       </div>
@@ -133,6 +119,7 @@ const renderPriceInput = (menuItemType, editValues, handleInputChange) => {
           type="text"
           value={editValues.price}
           onChange={(e) => handleInputChange('price', e.target.value)}
+          onBlur={(e) => handleBlur('price', e.target.value)}
           pattern="^\d+(\.\d{1,2})?$"
           required
         />
@@ -140,7 +127,6 @@ const renderPriceInput = (menuItemType, editValues, handleInputChange) => {
     );
   }
 };
-  
 
 const MenuItemForm = ({
   editingMode,
