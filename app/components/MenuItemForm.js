@@ -37,7 +37,7 @@ const renderPriceInput = (menuItemType, editValues, handleInputChange) => {
                     handleInputChange('pricePerPound', e.target.value);
                   }
                 }}
-                onBlur={(e) => handleBlur(key, e.target.value)}
+                // onBlur={(e) => handleBlur(key, e.target.value)}
                 pattern="^\d+(\.\d{1,2})?$"
                 className="text-black border border-gray-300 rounded px-2 py-1 mr-2 flex-grow"
               />
@@ -70,7 +70,7 @@ const renderPriceInput = (menuItemType, editValues, handleInputChange) => {
             type="text"
             value={editValues.price || ''}
             onChange={(e) => handleInputChange('price', e.target.value)}
-            onBlur={(e) => handleBlur('price', e.target.value)}
+            // onBlur={(e) => handleBlur('price', e.target.value)}
             pattern="^\d+(\.\d{1,2})?$"
             required
           />
@@ -99,7 +99,7 @@ const renderPriceInput = (menuItemType, editValues, handleInputChange) => {
                       handleInputChange('pricePerPound', (e.target.value / 4));
                     }
                   }}
-                  onBlur={(e) => handleBlur(key, e.target.value)}
+                  // onBlur={(e) => handleBlur(key, e.target.value)}
                   pattern="^\d+(\.\d{1,2})?$"
                   className="text-black border border-gray-300 rounded px-2 py-1 mr-2 flex-grow"
                 />
@@ -119,7 +119,7 @@ const renderPriceInput = (menuItemType, editValues, handleInputChange) => {
           type="text"
           value={editValues.price}
           onChange={(e) => handleInputChange('price', e.target.value)}
-          onBlur={(e) => handleBlur('price', e.target.value)}
+          // onBlur={(e) => handleBlur('price', e.target.value)}
           pattern="^\d+(\.\d{1,2})?$"
           required
         />
