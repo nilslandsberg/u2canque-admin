@@ -5,11 +5,18 @@ import { faTrashCan } from '@fortawesome/free-solid-svg-icons';
 
 const renderPriceInput = (menuItemType, editValues, handleInputChange) => {
   const handleBlur = (key, value) => {
-    let formattedValue = parseFloat(value).toFixed(2);
-    handleInputChange('price', {
-      ...editValues.price,
-      [key]: formattedValue,
-    });
+    // Check if the value is not empty
+    if (value.trim() !== '') {
+      let formattedValue = parseFloat(value).toFixed(2);
+      if (typeof editValues.price === 'string') {
+        handleInputChange('price', formattedValue);
+      } else {
+        handleInputChange('price', {
+          ...editValues.price,
+          [key]: formattedValue,
+        });
+      }
+    }
   };
 
   const renderInputs = (priceKeys) => (
@@ -37,7 +44,7 @@ const renderPriceInput = (menuItemType, editValues, handleInputChange) => {
                     handleInputChange('pricePerPound', e.target.value);
                   }
                 }}
-                // onBlur={(e) => handleBlur(key, e.target.value)}
+                onBlur={(e) => handleBlur(key, e.target.value)}
                 pattern="^\d+(\.\d{1,2})?$"
                 className="text-black border border-gray-300 rounded px-2 py-1 mr-2 flex-grow"
               />
@@ -62,7 +69,7 @@ const renderPriceInput = (menuItemType, editValues, handleInputChange) => {
         <div className="text-white font-bold text-xl mb-2">Price and Sizes:</div>
         <i className='text-red-500 my-5'>main items: EITHER enter single price OR enter prices by pounds</i>
         <br />
-        <i className='text-red-500 my-5'>side items: ONLY fill out price by pan (and click yes on "Is a Side?")</i>
+        <i className='text-red-500 my-5'>side items: EITHER single price OR by pan (click yes on Is a Side?)</i>
         <div className="flex my-5 items-center">
           <span className="text-white mr-2 font-bold w-32 ">Single Price:</span>
           <input
@@ -70,7 +77,7 @@ const renderPriceInput = (menuItemType, editValues, handleInputChange) => {
             type="text"
             value={editValues.price || ''}
             onChange={(e) => handleInputChange('price', e.target.value)}
-            // onBlur={(e) => handleBlur('price', e.target.value)}
+            onBlur={(e) => handleBlur('price', e.target.value)}
             pattern="^\d+(\.\d{1,2})?$"
             required
           />
@@ -97,9 +104,10 @@ const renderPriceInput = (menuItemType, editValues, handleInputChange) => {
 
                     if (key === 'fourPounds') {
                       handleInputChange('pricePerPound', (e.target.value / 4));
+                      handleInputChange('bulk', (true));
                     }
                   }}
-                  // onBlur={(e) => handleBlur(key, e.target.value)}
+                  onBlur={(e) => handleBlur(key, e.target.value)}
                   pattern="^\d+(\.\d{1,2})?$"
                   className="text-black border border-gray-300 rounded px-2 py-1 mr-2 flex-grow"
                 />
@@ -119,7 +127,7 @@ const renderPriceInput = (menuItemType, editValues, handleInputChange) => {
           type="text"
           value={editValues.price}
           onChange={(e) => handleInputChange('price', e.target.value)}
-          // onBlur={(e) => handleBlur('price', e.target.value)}
+          onBlur={(e) => handleBlur('price', e.target.value)}
           pattern="^\d+(\.\d{1,2})?$"
           required
         />
@@ -365,7 +373,7 @@ const MenuItemForm = ({
             </div>
           </div>
 
-          {/* New section for "Is a Side" */}
+          {/* New section for Is a Side */}
           <div className="my-6 w-1/2">
             <div className="font-bold text-xl text-white mb-2">Is a Side?</div>
             <div className="flex">

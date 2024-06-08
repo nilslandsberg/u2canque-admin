@@ -194,6 +194,7 @@ const RenderMenuItems = ({
         }),
         type: editValues.type,
         side: editValues.side || false,
+        bulk: editValues.bulk || false,
         ...(Object.keys(updatedOptions).length > 0 && { options: updatedOptions }),
       };
   
@@ -224,6 +225,7 @@ const RenderMenuItems = ({
           }),
           type: editValues.type,
           side: editValues.side || false,
+          bulk: editValues.bulk || false,
           ...(Object.keys(updatedOptions).length > 0 && { options: updatedOptions }),
         };
         await updateItem(token, id, updatedItem);
