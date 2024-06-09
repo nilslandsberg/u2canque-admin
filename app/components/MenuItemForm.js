@@ -4,18 +4,32 @@ import { capitalizeFirstLetter } from '../utils/stringManipulation';
 import { faTrashCan } from '@fortawesome/free-solid-svg-icons';
 
 const renderPriceInput = (menuItemType, editValues, handleInputChange) => {
-  if (menuItemType === 'bulk' || menuItemType === 'sides') {
-    const bulkPriceKeys = ['onePound', 'threePounds', 'fivePounds', 'pint', 'quart', 'halfPan', 'fullPan'];
+  const handleBlur = (key, value) => {
+    // Check if the value is not empty
+    if (value.trim() !== '') {
+      let formattedValue = parseFloat(value).toFixed(2);
+      if (typeof editValues.price === 'string') {
+        handleInputChange('price', formattedValue);
+      } else {
+        handleInputChange('price', {
+          ...editValues.price,
+          [key]: formattedValue,
+        });
+      }
+    }
+  };
 
-    return (
-      <div className="my-6 w-1/2">
-        <div className="text-white font-bold text-xl mb-2">Price and Sizes:</div>
-        {bulkPriceKeys.map((key) => {
-          const value = editValues.price?.[key] || '';
+  const renderInputs = (priceKeys) => (
+    <div className="my-6 w-1/2">
+      <div className="text-white font-bold text-xl mb-2">Price and Sizes:</div>
+      {priceKeys.map((key) => {
+        const value = editValues.price?.[key] || '';
+        const formattedKey = key.replace(/([A-Z])/g, ' $1').trim(); // Add space before uppercase letters
 
-          return (
-            <div key={key} className="flex items-center mb-2">
-              <span className="text-white mr-2 font-bold w-32">{key}:</span>
+        return (
+          <React.Fragment key={key}>
+            <div className="flex items-center mb-2">
+              <span className="text-white mr-2 font-bold w-32">{formattedKey.charAt(0).toUpperCase() + formattedKey.slice(1)}:</span>
               <input
                 type="text"
                 value={value.replace('$', '').trim()}
@@ -26,69 +40,84 @@ const renderPriceInput = (menuItemType, editValues, handleInputChange) => {
                     [key]: newValue,
                   });
 
-                  // Ensure editValues.size is an array
-                  const updatedSize = Array.isArray(editValues.size) ? editValues.size : [];
-
-                  handleInputChange('size', [
-                    ...updatedSize.filter((item) => !item.startsWith(key)),
-                    `${key}: ${newValue}`,
-                  ]);
-
                   if (key === 'onePound') {
                     handleInputChange('pricePerPound', e.target.value);
                   }
                 }}
-                placeholder="11.50, 34.50, etc."
+                onBlur={(e) => handleBlur(key, e.target.value)}
                 pattern="^\d+(\.\d{1,2})?$"
                 className="text-black border border-gray-300 rounded px-2 py-1 mr-2 flex-grow"
               />
             </div>
-          );
-        })}
-      </div>
-    );
+            {key === 'fivePounds' && <hr />}
+          </React.Fragment>
+        );
+      })}
+    </div>
+  );
+
+  if (menuItemType === 'bulk') {
+    const bulkPriceKeys = ['onePound', 'threePounds', 'fivePounds', 'halfPan', 'fullPan'];
+    return renderInputs(bulkPriceKeys);
+  } else if (menuItemType === 'sides') {
+    const sidesPriceKeys = ['pint', 'quart', 'halfPan', 'fullPan'];
+    return renderInputs(sidesPriceKeys);
   } else if (menuItemType === 'holiday') {
-      const holidayPriceKeys = ['default', 'fourPounds', 'fivePounds', 'sixPounds', 'sevenPounds', 'eightPounds', 'ninePounds', 'tenPounds', 'halfPan', 'fullPan'];
-      return (
-        <div className="my-6 w-1/2">
-          <div className="text-white font-bold text-xl mb-2">Price and Sizes:</div>
-          {holidayPriceKeys.map((key) => {
-            const value = editValues.price?.[key] || '';
-  
-            return (
-              <div key={key} className="flex items-center mb-2">
-                <span className="text-white mr-2 font-bold w-32">{key}:</span>
+    const holidayPriceKeys = ['fourPounds', 'fivePounds', 'sixPounds', 'sevenPounds', 'eightPounds', 'ninePounds', 'tenPounds', 'halfPan', 'fullPan'];
+    return (
+      <div className="my-6 w-1/2">
+        <div className="text-white font-bold text-xl mb-2">Price and Sizes:</div>
+        <i className='text-red-500 my-5'>main items: EITHER enter single price OR enter prices by pounds</i>
+        <br />
+        <i className='text-red-500 my-5'>side items: EITHER single price OR by pan (click yes on Is a Side?)</i>
+        <div className="flex my-5 items-center">
+          <span className="text-white mr-2 font-bold w-32 ">Single Price:</span>
+          <input
+            className="text-black border border-gray-300 rounded px-2 py-1 mr-2 flex-grow"
+            type="text"
+            value={editValues.price || ''}
+            onChange={(e) => handleInputChange('price', e.target.value)}
+            onBlur={(e) => handleBlur('price', e.target.value)}
+            pattern="^\d+(\.\d{1,2})?$"
+            required
+          />
+        </div>
+        <hr />
+        {holidayPriceKeys.map((key) => {
+          const value = editValues.price?.[key] || '';
+          const formattedKey = key.replace(/([A-Z])/g, ' $1').trim(); // Add space before uppercase letters
+
+          return (
+            <React.Fragment key={key}>
+              {key === 'halfPan' && <hr />}
+              <div className="flex items-center mb-3 mt-3">
+                <span className="text-white mr-2 font-bold w-32">{formattedKey.charAt(0).toUpperCase() + formattedKey.slice(1)}:</span>
                 <input
                   type="text"
                   value={value.replace('$', '').trim()}
                   onChange={(e) => {
                     const newValue = e.target.value;
                     handleInputChange('price', {
-                      ...editValues.price,
+                      ...(typeof editValues.price === 'string' ? {} : editValues.price),
                       [key]: newValue,
                     });
-  
-                    // Ensure editValues.size is an array
-                    const updatedSize = Array.isArray(editValues.size) ? editValues.size : [];
-  
-                    handleInputChange('size', [
-                      ...updatedSize.filter((item) => !item.startsWith(key)),
-                      `${key}: ${newValue}`,
-                    ]);
-  
-                    if (key === 'default') {
-                      handleInputChange('pricePerPound', e.target.value);
+
+                    if (key === 'fourPounds') {
+                      handleInputChange('pricePerPound', (e.target.value / 4));
+                      handleInputChange('bulk', (true));
                     }
                   }}
-                  placeholder="11.50, 34.50, etc."
+                  onBlur={(e) => handleBlur(key, e.target.value)}
                   pattern="^\d+(\.\d{1,2})?$"
                   className="text-black border border-gray-300 rounded px-2 py-1 mr-2 flex-grow"
                 />
               </div>
-            );
-          })}
-        </div>
-      );
+              {key === 'tenPounds' && <hr />}
+            </React.Fragment>
+          );
+        })}
+      </div>
+    );
   } else {
     return (
       <div className="my-5">
@@ -98,6 +127,7 @@ const renderPriceInput = (menuItemType, editValues, handleInputChange) => {
           type="text"
           value={editValues.price}
           onChange={(e) => handleInputChange('price', e.target.value)}
+          onBlur={(e) => handleBlur('price', e.target.value)}
           pattern="^\d+(\.\d{1,2})?$"
           required
         />
@@ -153,6 +183,7 @@ const MenuItemForm = ({
           value={editValues.image}
           onChange={(e) => handleInputChange('image', e.target.value)}
           className="text-l w-1/2"
+          placeholder='http:// or https://'
         />
       </div>
 
@@ -339,6 +370,37 @@ const MenuItemForm = ({
                   </label>
                 </div>
               ))}
+            </div>
+          </div>
+
+          {/* New section for Is a Side */}
+          <div className="my-6 w-1/2">
+            <div className="font-bold text-xl text-white mb-2">Is a Side?</div>
+            <div className="flex">
+              <div className="flex items-center mr-4">
+                <input
+                  type="radio"
+                  id="notSide"
+                  checked={!editValues.side}
+                  onChange={() => handleInputChange('side', false)}
+                  className="mr-2"
+                />
+                <label htmlFor="notSide" className="text-white">
+                  No
+                </label>
+              </div>
+              <div className="flex items-center">
+                <input
+                  type="radio"
+                  id="yesSide"
+                  checked={editValues.side}
+                  onChange={() => handleInputChange('side', true)}
+                  className="mr-2"
+                />
+                <label htmlFor="yesSide" className="text-white">
+                  Yes
+                </label>
+              </div>
             </div>
           </div>
         </div>

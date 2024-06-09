@@ -130,20 +130,60 @@ const RenderMenuItems = ({
         return acc;
       }, {});
   
-      // Validate price format
-      if (!isValidPrice(editValues.price)) {
-        alert('Please enter Price as a number with two decimals.');
-        return;
-      }
+      // Define the price keys for each menu item type
+      const priceKeysMap = {
+        bulk: ['onePound', 'threePounds', 'fivePounds', 'halfPan', 'fullPan'],
+        sides: ['pint', 'quart', 'halfPan', 'fullPan'],
+        holiday: ['onePound', 'fourPounds', 'fivePounds', 'sixPounds', 'sevenPounds', 'eightPounds', 'ninePounds', 'tenPounds', 'halfPan', 'fullPan']
+      };
   
-      const formattedPrice = editValues.price ? parseFloat(editValues.price).toFixed(2) : undefined;
+      // Define the required price keys for validation
+      const requiredPriceFields = {
+        bulk: 'onePound',
+        // holiday: 'onePound'
+      };
+  
+      // Get the price keys and required field for the current menu item type
+      const priceKeys = priceKeysMap[menuItemType] || [];
+      const requiredPriceField = requiredPriceFields[menuItemType];
+
+      // Regular expression to validate price format (e.g., 9.00, 10.50, 100.00)
+      const priceRegex = /^\d+\.\d{2}$/;
+      
+      // Validate the price fields
+      if (typeof editValues.price === 'object') {
+        // For bulk, sides, and holiday items
+        for (let key of priceKeys) {
+          const value = editValues.price?.[key];
+          
+          if (key === requiredPriceField) {
+            if (!value || !priceRegex.test(value)) {
+              alert(`Please enter a valid price with two decimal places for ${key} (e.g., 9.00, 10.50).`);
+              return;
+            }
+          } else if (value) {
+            if (!priceRegex.test(value)) {
+              alert(`Please enter a valid price with two decimal places for ${key} (e.g., 9.00, 10.50).`);
+              return;
+            }
+          }
+        }
+      } else {
+        // For items with price as a string (e.g., lunch items)
+        if (!editValues.price || !priceRegex.test(editValues.price)) {
+          alert('Please enter a valid price with two decimal places (e.g., 9.00, 10.50).');
+          return;
+        }
+      }
+
+      const formattedSize = formatSizeArray(menuItemType, editValues);
   
       const updatedItem = {
         name: editValues.name,
         image: editValues.image,
         description: editValues.description,
         price: editValues.price,
-        size: editValues.size,
+        size: formattedSize,
         pricePerPound: editValues.pricePerPound,
         [sectionName]: true,
         ...(menuItemType === 'lunch' && {
@@ -153,6 +193,8 @@ const RenderMenuItems = ({
           bread: editValues.bread,
         }),
         type: editValues.type,
+        side: editValues.side || false,
+        bulk: editValues.bulk || false,
         ...(Object.keys(updatedOptions).length > 0 && { options: updatedOptions }),
       };
   
@@ -172,7 +214,7 @@ const RenderMenuItems = ({
           image: editValues.image,
           description: editValues.description,
           price: editValues.price || existingItem.price,
-          size: editValues.size || existingItem.size,
+          size: formattedSize || existingItem.size,
           pricePerPound: editValues.pricePerPound || existingItem.pricePerPound,
           [sectionName]: true,
           ...(menuItemType === 'lunch' && {
@@ -182,6 +224,8 @@ const RenderMenuItems = ({
             bread: editValues.bread,
           }),
           type: editValues.type,
+          side: editValues.side || false,
+          bulk: editValues.bulk || false,
           ...(Object.keys(updatedOptions).length > 0 && { options: updatedOptions }),
         };
         await updateItem(token, id, updatedItem);
@@ -225,6 +269,53 @@ const RenderMenuItems = ({
         </div>
       );
     });
+  };
+
+  const formatSizeArray = (menuItemType, editValues) => {
+    if (menuItemType === 'bulk' || menuItemType === 'sides') {
+      const bulkPriceKeys = ['onePound', 'threePounds', 'fivePounds', 'pint', 'quart', 'halfPan', 'fullPan'];
+      const servingsMap = {
+        onePound: '1lb (serves 3-4)',
+        threePounds: '3lbs (serves 9-12)',
+        fivePounds: '5lbs (serves 15-20)',
+        pint: 'Pint (serves 2-3)',
+        quart: 'Quart (serves 4-6)',
+        halfPan: 'Half-Pan (Serves 12-14)',
+        fullPan: 'Full-Pan (Serves 24-28)',
+      };
+  
+      return bulkPriceKeys
+        .filter((key) => editValues.price?.[key])
+        .map((key) => {
+          const price = parseFloat(editValues.price[key]).toFixed(2);
+          return `${servingsMap[key]}: $${price}`;
+        });
+    } else if (menuItemType === 'holiday') {
+      const holidayPriceKeys = ['onePound', 'fourPounds', 'fivePounds', 'sixPounds', 'sevenPounds', 'eightPounds', 'ninePounds', 'tenPounds', 'pint', 'quart', 'halfPan', 'fullPan'];
+      const holidayServingsMap = {
+        onePound: '1lb',
+        fourPounds: '4lbs',
+        fivePounds: '5lbs',
+        sixPounds: '6lbs',
+        sevenPounds: '7lbs',
+        eightPounds: '8lbs',
+        ninePounds: '9lbs',
+        tenPounds: '10lbs',
+        pint: 'Pint (serves 2-3)',
+        quart: 'Quart (serves 4-6)',
+        halfPan: 'Half-Pan (Serves 12-14)',
+        fullPan: 'Full-Pan (Serves 24-28)',
+      };
+  
+      return holidayPriceKeys
+        .filter((key) => editValues.price?.[key])
+        .map((key) => {
+          const price = parseFloat(editValues.price[key]).toFixed(2);
+          return `${holidayServingsMap[key]} : $${price}`;
+        });
+    }
+  
+    return [];
   };
   
   const renderPrice = (item) => {
@@ -318,6 +409,10 @@ const RenderMenuItems = ({
         ) : (
           <div className='indent-2'>{item.type}</div>
         )}
+      <div className="text-white my-2">
+        <h4 className="font-bold text-l text-white my-1">Is a Side?</h4>
+        <div className="text-white indent-2 my-1">{item.side ? 'Yes' : 'No'}</div>
+      </div>
     </div>
   );
   
