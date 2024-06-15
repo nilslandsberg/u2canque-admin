@@ -23,7 +23,7 @@ function NavBarLinks() {
               <a className="hover:text-gray-400 flex items-center py-1 pl-6 pr-8" href="/memorial-day">Memorial Day</a>
             </div>
           </div>
-          <a className="text-transparent" href="/edit-menu">Edit Menu</a>
+          <a className="hover:text-gray-400" href="/edit-menu">Edit Menu</a>
         </div>
       </>
     )
