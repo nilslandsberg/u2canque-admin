@@ -1,6 +1,6 @@
 export function getOrdersForToday(token) {
   const apiEndpoint = 'https://u2canque-server.onrender.com/api/order/today';
-  console.log("token: ", token)
+
   return fetch(apiEndpoint, {
     method: 'GET',
     headers: new Headers({

@@ -1,6 +1,6 @@
 export function cancelHolidayOrder(orderId, token) {
   const apiEndpoint = `https://u2canque-server.onrender.com/api/order/holiday/${orderId}`;
-  console.log("token: ", token)
+
   return fetch(apiEndpoint, {
     method: 'DELETE',
     headers: new Headers({
