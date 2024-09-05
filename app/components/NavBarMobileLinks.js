@@ -25,6 +25,7 @@ function NavBarMobiledivs() {
               <a className="hover:text-gray-400 flex items-center py-1 pl-6 pr-8" href="/christmas">Christmas</a>
               <a className="hover:text-gray-400 flex items-center py-1 pl-6 pr-8" href="/memorial-day">Memorial Day</a>
               <a className="hover:text-gray-400 flex items-center py-1 pl-6 pr-8" href="/independence-day">Independence Day</a>
+              <a className="hover:text-gray-400 flex items-center py-1 pl-6 pr-8" href="/ribs">Ribs Flash Sale</a>
             </div>
           </div>
           <a className="block py-2 px-4 text-sm hover:bg-slate-700" href="/edit-menu">Edit Menu</a>
